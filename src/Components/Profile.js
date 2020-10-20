@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import TopNav from "./TopNav";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import BottomNav from "./BottomNav";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,38 +110,49 @@ export default function ImageGridList() {
   return (
     <>
       <TopNav title="lisa_blink" />
-      <div className={classes.profile}>
-        <img
-          alt="Remy Sharp"
-          src="https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278"
-          className={classes.large}
-        />
-      </div>
-      <div className={classes.profileContent}>
-        <div className={classes.profileRack}>
-          <h2>489</h2>
-          <p>Ranking</p>
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 20,
+        }}
+      >
+        <div className={classes.profile}>
+          <img
+            alt="Remy Sharp"
+            src="https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278"
+            className={classes.large}
+          />
         </div>
-        <div className={classes.profileRack}>
-          <h2>76</h2>
-          <p>Upvotes</p>
+        <div className={classes.profileContent}>
+          <div className={classes.profileRack}>
+            <h2>489</h2>
+            <p>Ranking</p>
+          </div>
+          <div className={classes.profileRack}>
+            <h2>76</h2>
+            <p>Upvotes</p>
+          </div>
+          <div className={classes.profileRack}>
+            <h2>89</h2>
+            <p>Posts</p>
+          </div>
         </div>
-        <div className={classes.profileRack}>
-          <h2>89</h2>
-          <p>Posts</p>
+        <hr />
+        <h2>Gallery</h2>
+        <div className={classes.root}>
+          <GridList cellHeight={160} className={classes.gridList} cols={3}>
+            {tileData.map((tile) => (
+              <GridListTile key={tile.img} cols={tile.cols || 1}>
+                <img src={tile.img} alt={tile.title} />
+              </GridListTile>
+            ))}
+          </GridList>
         </div>
-      </div>
-      <hr />
-      <h2>Gallery</h2>
-      <div className={classes.root}>
-        <GridList cellHeight={160} className={classes.gridList} cols={3}>
-          {tileData.map((tile) => (
-            <GridListTile key={tile.img} cols={tile.cols || 1}>
-              <img src={tile.img} alt={tile.title} />
-            </GridListTile>
-          ))}
-        </GridList>
-      </div>
+      </motion.div>
+      <BottomNav active={3} />
     </>
   );
 }

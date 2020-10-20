@@ -9,6 +9,7 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import HomeIcon from "@material-ui/icons/Home";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -24,7 +25,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function BottomNav({ toggleDrawer, active = 1 }) {
+export default function BottomNav({ toggleDrawer = () => {}, active = 1 }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(active);
 
@@ -48,7 +49,7 @@ export default function BottomNav({ toggleDrawer, active = 1 }) {
       <BottomNavigationAction
         onClick={() => history.push(`/main`)}
         className={classes.btn}
-        label="Voting area"
+        label="Voting"
         icon={<HomeIcon />}
       />
       <BottomNavigationAction
@@ -56,6 +57,12 @@ export default function BottomNav({ toggleDrawer, active = 1 }) {
         className={classes.btn}
         label="Leaderboard"
         icon={<BarChartIcon />}
+      />
+      <BottomNavigationAction
+        onClick={() => history.push(`/Profile/lisa_blink`)}
+        className={classes.btn}
+        label="Profile"
+        icon={<AccountCircleIcon />}
       />
     </BottomNavigation>
   );
