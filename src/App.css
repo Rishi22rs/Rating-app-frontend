@@ -1,0 +1,14 @@
+html {
+  scroll-behavior: smooth;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+.image {
+  width: 100%;
+  object-fit: contain;
+}
+.my-container {
+  padding: 30px;
+}
