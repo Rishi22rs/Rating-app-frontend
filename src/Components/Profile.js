@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import TopNav from "./TopNav";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import BottomNav from "./BottomNav";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     backgroundColor: theme.palette.background.paper,
     marginTop: 20,
+    marginBottom: 60,
   },
   gridList: {
     width: "100%",
@@ -105,8 +107,18 @@ const tileData = [
 ];
 export default function ImageGridList() {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+  const [data, setData] = useState();
 
+  const getPosts = async () => {
+    await axios
+      .post(`http://localhost:6969/profilePosts`, { user_id: 2 })
+      .then((res) => setData(res.data));
+  };
+  useEffect(() => {
+    getPosts();
+  }, []);
+  console.log(data);
+  let cols = [1, 1, 1, 3];
   return (
     <>
       <TopNav title="lisa_blink" />
@@ -144,11 +156,12 @@ export default function ImageGridList() {
         <h2>Gallery</h2>
         <div className={classes.root}>
           <GridList cellHeight={160} className={classes.gridList} cols={3}>
-            {tileData.map((tile) => (
-              <GridListTile key={tile.img} cols={tile.cols || 1}>
-                <img src={tile.img} alt={tile.title} />
-              </GridListTile>
-            ))}
+            {data &&
+              data.map((tile, index) => (
+                <GridListTile key={tile.url} cols={cols[index % 4]}>
+                  <img src={tile.url} alt={tile.description} />
+                </GridListTile>
+              ))}
           </GridList>
         </div>
       </motion.div>

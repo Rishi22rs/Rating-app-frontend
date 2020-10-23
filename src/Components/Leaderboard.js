@@ -11,6 +11,8 @@ import TopNav from "./TopNav";
 import axios from "axios";
 import BottomNav from "./BottomNav";
 
+import { FixedSizeList } from "react-window";
+
 const useStyles = makeStyles((theme) => ({
   offsetTop: {
     marginTop: 50,
@@ -38,13 +40,13 @@ export default function Leaderboard() {
     getLeaderboard();
   }, []);
 
-  window.addEventListener("scroll", (event) => {
-    console.log(window.pageYOffset, pageOffset);
-    if (window.pageYOffset > pageOffset && !flag) {
-      flag = true;
-      getLeaderboard();
-    }
-  });
+  // window.addEventListener("scroll", (event) => {
+  //   console.log(window.pageYOffset, pageOffset);
+  //   if (window.pageYOffset > pageOffset && !flag) {
+  //     flag = true;
+  //     getLeaderboard();
+  //   }
+  // });
 
   const getLeaderboard = async () => {
     console.log(offset);
@@ -75,39 +77,47 @@ export default function Leaderboard() {
     setState({ ...state, [anchor]: open });
   };
 
+  const Row = (x, index) => (
+    <div>
+      rishi
+      {/* <ListItem alignItems="flex-start">
+          <ListItemAvatar>
+            <Avatar alt="Remy Sharp" src={x.url} />
+          </ListItemAvatar>
+          <ListItemText
+            primary={x.votes}
+            secondary={
+              <React.Fragment>
+                <Typography
+                  component="span"
+                  variant="body2"
+                  className={classes.inline}
+                  color="textPrimary"
+                >
+                  {index + 1}
+                </Typography>
+                {" — I'll be in your neighborhood doing errands this…"}
+              </React.Fragment>
+            }
+          />
+        </ListItem>
+        <Divider variant="inset" component="li" /> */}
+    </div>
+  );
+
   return (
     <>
       <TopNav title="Leaderboard" />
       <div className={classes.container} className={classes.offsetTop}>
-        <List className={classes.root}>
-          {data &&
-            data.map((x, index) => (
-              <div key={index}>
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src={x.url} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={x.votes}
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          className={classes.inline}
-                          color="textPrimary"
-                        >
-                          {index + 1}
-                        </Typography>
-                        {" — I'll be in your neighborhood doing errands this…"}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-              </div>
-            ))}
-        </List>
+        <FixedSizeList
+          height={150}
+          itemCount={1000}
+          itemSize={35}
+          width={300}
+          className={classes.root}
+        >
+          {Row}
+        </FixedSizeList>
       </div>
       <BottomNav toggleDrawer={toggleDrawer} active={2} />
     </>

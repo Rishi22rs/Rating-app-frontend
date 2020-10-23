@@ -30,8 +30,6 @@ const Compare = ({ rot, setRot, category, setCategory, data, setData }) => {
     getContentData();
   }, []);
 
-  console.log(data && data[0].url);
-
   const VoteThis = async (votedPic) => {
     await axios.post(`http://localhost:6969/vote`, { image_id: votedPic });
     setData(null);
