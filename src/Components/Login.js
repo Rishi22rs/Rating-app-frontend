@@ -1,8 +1,8 @@
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import BG from "../Graphics/login_bg.jpg";
-
+import axios from "axios";
 import PersonIcon from "@material-ui/icons/Person";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
@@ -77,6 +77,20 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const classes = useStyles();
   const history = useHistory();
+  const [inputData, setInputData] = useState({ email: "", password: "" });
+
+  const updateToken = async () => {
+    const response = await axios.post("http://localhost:6969/login", inputData);
+    return response.data;
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    updateToken().then((res) => {
+      if (res.token) history.push("/main");
+    });
+  };
+
   return (
     <div className={classes.LoginContainer}>
       <div className={classes.logo}>
@@ -87,7 +101,14 @@ const Login = () => {
           <i className={classes.i}>
             <PersonIcon />
           </i>
-          <input type="text" placeholder="Username" className={classes.input} />
+          <input
+            type="text"
+            placeholder="Username"
+            className={classes.input}
+            onChange={(e) =>
+              setInputData({ ...inputData, email: e.target.value })
+            }
+          />
         </div>
         <div className={classes.input_container}>
           <i className={classes.i}>
@@ -97,9 +118,12 @@ const Login = () => {
             type="password"
             placeholder="Password"
             className={classes.input}
+            onChange={(e) =>
+              setInputData({ ...inputData, password: e.target.value })
+            }
           />
         </div>
-        <button className={classes.btn} onClick={() => history.push("/main")}>
+        <button className={classes.btn} onClick={(e) => handleLogin(e)}>
           Get Started
         </button>
         <div className={classes.linksContainer}>
