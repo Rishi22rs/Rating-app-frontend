@@ -20,6 +20,9 @@ import { useHistory } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 100 + "%",
+    borderRadius: 40,
+    background: "#52AFD3",
+    color: "#D0FBFD",
   },
   media: {
     height: 0,
@@ -80,7 +83,6 @@ export default function RecipeReviewCard({
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
-        <h3>{votes}</h3>
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,

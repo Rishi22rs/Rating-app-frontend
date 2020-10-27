@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import BottomNav from "./BottomNav";
 import axios from "axios";
 
+import ObserverWrapper from "@emarketeross/simple-react-intersection-observer";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -14,8 +16,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-around",
     overflow: "hidden",
     backgroundColor: theme.palette.background.paper,
-    marginTop: 20,
-    marginBottom: 60,
   },
   gridList: {
     width: "100%",
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     height: "300px",
   },
   large: {
-    marginTop: "80px",
     width: theme.spacing(20),
     height: theme.spacing(20),
     borderRadius: "10px",
@@ -111,7 +110,15 @@ export default function ImageGridList() {
 
   const getPosts = async () => {
     await axios
-      .post(`http://localhost:6969/profilePosts`, { user_id: 2 })
+      .post(
+        `http://localhost:6969/profilePosts`,
+        { user_id: 2 },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("t")}`,
+          },
+        }
+      )
       .then((res) => setData(res.data));
   };
   useEffect(() => {
@@ -159,7 +166,13 @@ export default function ImageGridList() {
             {data &&
               data.map((tile, index) => (
                 <GridListTile key={tile.url} cols={cols[index % 4]}>
-                  <img src={tile.url} alt={tile.description} />
+                  <ObserverWrapper>
+                    <img
+                      className="lazy"
+                      src={tile.url}
+                      alt={tile.description}
+                    />
+                  </ObserverWrapper>
                 </GridListTile>
               ))}
           </GridList>

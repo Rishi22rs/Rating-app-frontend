@@ -34,9 +34,15 @@ const MyDrawer = ({ rot, setRot, setCategory, nowFetch, data, setData }) => {
 
   useEffect(() => {
     const getCategory = async () => {
-      await axios.get(`http://localhost:6969/category`).then((response) => {
-        setCate(response);
-      });
+      await axios
+        .get(`http://localhost:6969/category`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("t")}`,
+          },
+        })
+        .then((response) => {
+          setCate(response);
+        });
     };
     getCategory();
   }, []);

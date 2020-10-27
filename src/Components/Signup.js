@@ -1,10 +1,11 @@
 import { makeStyles } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-import BG from "../Graphics/login_bg.jpg";
+import BG from "../Graphics/signup_bg.jpg";
 import axios from "axios";
 import PersonIcon from "@material-ui/icons/Person";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
+import AlternateEmailIcon from "@material-ui/icons/AlternateEmail";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from "react-loader-spinner";
 
@@ -67,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
     width: "80%",
     marginTop: 10,
     opacity: 0.7,
-    outline: "none",
   },
   linksContainer: {
     marginTop: 70,
@@ -80,38 +80,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const updateToken = async (inputData) => {
-  const response = await axios.post("http://localhost:6969/login", inputData);
-  return response.data;
-};
-
-const Login = () => {
+const Signup = () => {
   const classes = useStyles();
   const history = useHistory();
   const [inputData, setInputData] = useState({
+    username: "",
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
-  const [isErr, setIsErr] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    if (inputData.email == "" || inputData.password == "") {
+    if (
+      inputData.username == "" ||
+      inputData.email == "" ||
+      inputData.password == ""
+    ) {
       setIsEmpty(true);
       setIsLoading(false);
     }
-    updateToken(inputData).then((res) => {
-      if (res.err) {
-        setIsErr(true);
-        setIsLoading(false);
-      } else {
-        localStorage.setItem("t", res.token);
-        if (res.token) history.push("/main");
-      }
-    });
+    console.log(inputData);
   };
 
   useEffect(() => {
@@ -127,7 +118,6 @@ const Login = () => {
       </div>
       <form className={classes.form}>
         {isEmpty && <p className={classes.empty}>*Fields are empty.</p>}
-        {isErr && <p className={classes.empty}>*Invalid credentials.</p>}
         <div className={classes.input_container}>
           <i className={classes.i}>
             <PersonIcon />
@@ -135,6 +125,20 @@ const Login = () => {
           <input
             type="text"
             placeholder="Username"
+            className={classes.input}
+            onChange={(e) => {
+              setInputData({ ...inputData, username: e.target.value });
+              setIsEmpty(false);
+            }}
+          />
+        </div>
+        <div className={classes.input_container}>
+          <i className={classes.i}>
+            <AlternateEmailIcon />
+          </i>
+          <input
+            type="email"
+            placeholder="Email"
             className={classes.input}
             onChange={(e) => {
               setInputData({ ...inputData, email: e.target.value });
@@ -164,8 +168,8 @@ const Login = () => {
           )}
         </button>
         <div className={classes.linksContainer}>
-          <Link className={classes.links} to="/Signup">
-            Create Account
+          <Link className={classes.links} to="/">
+            Already a user
           </Link>
           <Link className={classes.links}>Need Help</Link>
         </div>
@@ -174,4 +178,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

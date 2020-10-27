@@ -10,7 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import TopNav from "./TopNav";
 import axios from "axios";
 import BottomNav from "./BottomNav";
-
+import Loader from "react-loader-spinner";
+import ObserverWrapper from "@emarketeross/simple-react-intersection-observer";
 import { FixedSizeList } from "react-window";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +21,12 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: "100%",
-    backgroundColor: theme.palette.background.paper,
+  },
+  listItem: {
+    backgroundColor: "#52AFD3",
+    borderRadius: 25,
+    marginBottom: 10,
+    color: "white",
   },
   inline: {
     display: "inline",
@@ -28,12 +34,17 @@ const useStyles = makeStyles((theme) => ({
   container: {
     marginBottom: "65px",
   },
+  loader: {
+    display: "flex",
+    justifyContent: "center",
+  },
 }));
 
 export default function Leaderboard() {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [offset, setOffset] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [pageOffset, setPageOffset] = useState(window.innerHeight - 250);
   let flag = false;
   useEffect(() => {
@@ -49,14 +60,20 @@ export default function Leaderboard() {
   // });
 
   const getLeaderboard = async () => {
-    console.log(offset);
     await axios
-      .post(`http://localhost:6969/leaderboard`, { offset })
+      .post(
+        `http://localhost:6969/leaderboard`,
+        { offset },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("t")}`,
+          },
+        }
+      )
       .then((res) => {
         console.log("pure", res.data);
-        setData(data && data.concat(res.data));
-        setPageOffset(pageOffset + window.pageYOffset);
-        setOffset(offset + 10);
+        setData(res.data);
+        setIsLoading(false);
       });
   };
   console.log(data);
@@ -77,48 +94,53 @@ export default function Leaderboard() {
     setState({ ...state, [anchor]: open });
   };
 
-  const Row = (x, index) => (
-    <div>
-      rishi
-      {/* <ListItem alignItems="flex-start">
-          <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src={x.url} />
-          </ListItemAvatar>
-          <ListItemText
-            primary={x.votes}
-            secondary={
-              <React.Fragment>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  className={classes.inline}
-                  color="textPrimary"
-                >
-                  {index + 1}
-                </Typography>
-                {" — I'll be in your neighborhood doing errands this…"}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-        <Divider variant="inset" component="li" /> */}
-    </div>
-  );
+  const Row = (x, index) => <div></div>;
 
   return (
     <>
       <TopNav title="Leaderboard" />
-      <div className={classes.container} className={classes.offsetTop}>
-        <FixedSizeList
-          height={150}
-          itemCount={1000}
-          itemSize={35}
-          width={300}
-          className={classes.root}
-        >
-          {Row}
-        </FixedSizeList>
-      </div>
+      {isLoading ? (
+        <div className={classes.loader}>
+          <Loader type="Puff" color="black" height={50} width={100} />
+        </div>
+      ) : (
+        <div className={classes.container} className={classes.offsetTop}>
+          <List
+            height={150}
+            itemCount={1000}
+            itemSize={35}
+            width={300}
+            className={classes.root}
+          >
+            {data.map((x, index) => (
+              <ObserverWrapper>
+                <ListItem alignItems="flex-start" className={classes.listItem}>
+                  <ListItemAvatar>
+                    <Avatar alt="Remy Sharp" src={x.url} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={`${x.votes} Upvotes`}
+                    secondary={
+                      <React.Fragment>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          className={classes.inline}
+                          color="textPrimary"
+                        >
+                          {index + 1}
+                        </Typography>
+                        {" — I'll be in your neighborhood doing errands this…"}
+                      </React.Fragment>
+                    }
+                  />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+              </ObserverWrapper>
+            ))}
+          </List>
+        </div>
+      )}
       <BottomNav toggleDrawer={toggleDrawer} active={2} />
     </>
   );

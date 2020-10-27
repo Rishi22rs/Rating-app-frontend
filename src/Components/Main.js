@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Drawer from "./MyDrawer";
 import Compare, { nowFetch } from "./Compare";
-import SimpleBottomNavigation from "./BottomNav";
 import TopNav from "./TopNav";
+import { Context } from "../States/GlobalStates";
 
 const Main = () => {
-  const [category, setCategory] = useState("cars");
-  const [data, setData] = useState();
-  const [rot, setRot] = useState(0);
+  const [category, setCategory, data, setData, rot, setRot] = useContext(
+    Context
+  );
   return (
-    <>
+    <div>
       <TopNav />
       <Compare
         rot={rot}
@@ -19,7 +19,7 @@ const Main = () => {
         setCategory={setCategory}
         category={category}
       />
-      <Drawer
+      {/* <Drawer
         rot={rot}
         setRot={setRot}
         setData={setData}
@@ -27,8 +27,8 @@ const Main = () => {
         setCategory={setCategory}
         nowFetch={nowFetch}
         category={category}
-      />
-    </>
+      /> */}
+    </div>
   );
 };
 
