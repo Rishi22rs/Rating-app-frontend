@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -16,6 +16,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { useHistory } from "react-router-dom";
+import { Context } from "../States/GlobalStates";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RecipeReviewCard({
-  url = "https://blackpinkupdate.com/wp-content/uploads/2018/08/BLACKPINK-Jennie-Instagram-Photo-30-August-2018-Disney-Tokyo-3.jpg",
+  //url = "https://blackpinkupdate.com/wp-content/uploads/2018/08/BLACKPINK-Jennie-Instagram-Photo-30-August-2018-Disney-Tokyo-3.jpg",
+  url = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Digg-new.svg/1200px-Digg-new.svg.png",
   name = "Rosie",
   caption = "How you like that",
   handleClick,
@@ -57,6 +59,10 @@ export default function RecipeReviewCard({
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  const [category, setCategory, data, setData, rot, setRot] = useContext(
+    Context
+  );
 
   return (
     <Card className={classes.root}>
@@ -75,7 +81,7 @@ export default function RecipeReviewCard({
         title={name}
         subheader="September 14, 2016"
       />
-      <CardMedia className={classes.media} image={url} title="Paella dish" />
+      <CardMedia className={classes.media} image={url} title={name} />
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites" onClick={handleClick}>
           <FavoriteIcon />

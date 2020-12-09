@@ -7,22 +7,29 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
-
 import Container from "@material-ui/core/Container";
 
 import Card from "./Card";
 import { makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import { API } from "../API/api";
 
 const useStyles = makeStyles((theme) => ({
   offsetBottom: {
     marginBottom: 70,
   },
+  container: {
+    height: "100%",
+    scrollSnapAlign: "start",
+  },
+  card: {
+    height: "100%",
+  },
 }));
 
 export const nowFetch = async (category) => {
   const response = await axios.post(
-    `http://localhost:6969/random`,
+    `${API}/random`,
     {
       category,
     },
@@ -32,23 +39,39 @@ export const nowFetch = async (category) => {
       },
     }
   );
+  console.log(response.data);
   return response.data;
 };
-
-const Compare = ({ rot, setRot, category, setCategory, data, setData }) => {
+const Compare = ({
+  rot,
+  setRot,
+  category,
+  setCategory,
+  data,
+  setData,
+  auth,
+  setAuth,
+  showModal,
+  setShowModal,
+}) => {
   const controls = useAnimation();
   const history = useHistory();
   const classes = useStyles();
+
   const getContentData = async () => {
-    setData(await nowFetch(category));
+    let putThis = await nowFetch(category);
+    console.log(putThis);
+    setTimeout(() => setData(putThis), 1000);
   };
   useEffect(() => {
+    console.log(auth);
     getContentData();
+    setRot(0);
   }, []);
 
   const VoteThis = async (votedPic) => {
     await axios.post(
-      `http://localhost:6969/vote`,
+      `${API}/vote`,
       { image_id: votedPic },
       {
         headers: {
@@ -56,7 +79,15 @@ const Compare = ({ rot, setRot, category, setCategory, data, setData }) => {
         },
       }
     );
-    setData(null);
+    await axios.post(
+      `${API}/view`,
+      { image_id1: data[0].image_id, image_id2: data[1].image_id },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("t")}`,
+        },
+      }
+    );
     getContentData();
   };
 
@@ -74,19 +105,22 @@ const Compare = ({ rot, setRot, category, setCategory, data, setData }) => {
 
   const handleClick = (data) => {
     setRot((prev) => prev + 360);
-    VoteThis(data && data[0].image_id);
+    if (auth === 200) VoteThis(data && data[0].image_id);
+    else setShowModal(true);
   };
 
   return (
     <div className={classes.offsetBottom}>
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" className={classes.container}>
         <motion.div
+          className={classes.card}
           initial={{ scale: 0 }}
-          animate={{ rotate: rot, scale: 1 }}
+          animate={{ scale: 1, rotate: rot }}
           transition={{
             type: "spring",
             stiffness: 200,
             damping: 20,
+            delay: 1,
           }}
           exit={{ opacity: 0 }}
         >
@@ -103,12 +137,14 @@ const Compare = ({ rot, setRot, category, setCategory, data, setData }) => {
         </motion.div>
         <br />
         <motion.div
+          className={classes.card}
           initial={{ scale: 0 }}
-          animate={{ rotate: rot, scale: 1 }}
+          animate={{ scale: 1, rotate: rot }}
           transition={{
             type: "spring",
             stiffness: 200,
             damping: 20,
+            delay: 1,
           }}
         >
           <Card

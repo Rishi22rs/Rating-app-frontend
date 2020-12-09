@@ -7,6 +7,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from "react-loader-spinner";
+import { API } from "../API/api";
 
 const useStyles = makeStyles((theme) => ({
   LoginContainer: {
@@ -81,7 +82,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const updateToken = async (inputData) => {
-  const response = await axios.post("http://localhost:6969/login", inputData);
+  console.log(inputData);
+  const response = await axios.post(`${API}/login`, inputData);
   return response.data;
 };
 
@@ -97,21 +99,22 @@ const Login = () => {
   const [isErr, setIsErr] = useState(false);
 
   const handleLogin = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    if (inputData.email == "" || inputData.password == "") {
-      setIsEmpty(true);
-      setIsLoading(false);
-    }
-    updateToken(inputData).then((res) => {
-      if (res.err) {
-        setIsErr(true);
-        setIsLoading(false);
-      } else {
-        localStorage.setItem("t", res.token);
-        if (res.token) history.push("/main");
-      }
-    });
+    // e.preventDefault();
+    // setIsLoading(true);
+    // if (inputData.email == "" || inputData.password == "") {
+    //   setIsEmpty(true);
+    //   setIsLoading(false);
+    // }
+    // updateToken(inputData).then((res) => {
+    //   if (res.err) {
+    //     setIsErr(true);
+    //     setIsLoading(false);
+    //   } else {
+    //     localStorage.setItem("t", res.token);
+    //     if (res.token) history.push("/main");
+    //   }
+    // });
+    history.push("/main");
   };
 
   useEffect(() => {

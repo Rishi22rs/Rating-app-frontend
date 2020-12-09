@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-
-const initialState = {
-  name: "Rishi",
-};
-const initialState1 = {
-  surname: "Srivastava",
-};
+import MyModal from "../Components/MyModal";
 
 export const Context = React.createContext();
 
@@ -13,13 +7,29 @@ const GlobalStates = ({ children }) => {
   const [category, setCategory] = useState("cars");
   const [data, setData] = useState();
   const [rot, setRot] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [auth, setAuth] = useState(401);
 
   return (
-    <Context.Provider
-      value={[category, setCategory, data, setData, rot, setRot]}
-    >
-      {children}
-    </Context.Provider>
+    <>
+      <Context.Provider
+        value={[
+          category,
+          setCategory,
+          data,
+          setData,
+          rot,
+          setRot,
+          showModal,
+          setShowModal,
+          auth,
+          setAuth,
+        ]}
+      >
+        <MyModal showModal={showModal} setShowModal={setShowModal} />
+        {children}
+      </Context.Provider>
+    </>
   );
 };
 

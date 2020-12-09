@@ -1,25 +1,39 @@
 import React, { useState, useEffect, useContext } from "react";
-import Drawer from "./MyDrawer";
 import Compare, { nowFetch } from "./Compare";
 import TopNav from "./TopNav";
 import { Context } from "../States/GlobalStates";
 
 const Main = () => {
-  const [category, setCategory, data, setData, rot, setRot] = useContext(
-    Context
-  );
+  const [
+    category,
+    setCategory,
+    data,
+    setData,
+    rot,
+    setRot,
+    showModal,
+    setShowModal,
+    auth,
+    setAuth,
+  ] = useContext(Context);
+
   return (
-    <div>
-      <TopNav />
-      <Compare
-        rot={rot}
-        setRot={setRot}
-        setData={setData}
-        data={data}
-        setCategory={setCategory}
-        category={category}
-      />
-      {/* <Drawer
+    <>
+      <div>
+        <TopNav />
+        <Compare
+          rot={rot}
+          setRot={setRot}
+          setData={setData}
+          data={data}
+          setCategory={setCategory}
+          category={category}
+          auth={auth}
+          setAuth={setAuth}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+        {/* <Drawer
         rot={rot}
         setRot={setRot}
         setData={setData}
@@ -28,7 +42,8 @@ const Main = () => {
         nowFetch={nowFetch}
         category={category}
       /> */}
-    </div>
+      </div>
+    </>
   );
 };
 

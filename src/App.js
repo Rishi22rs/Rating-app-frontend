@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import { Link } from "react-router-dom";
+import { API } from "./API/api";
 
 function App() {
   const [data, setData] = useState([]);
@@ -27,7 +28,7 @@ function App() {
   };
 
   const AddImages = (url) => {
-    axios.post("http://localhost:6969/addImages", {
+    axios.post(`${API}/addImages`, {
       url,
       category,
     });
@@ -92,9 +93,9 @@ function App() {
               <div key={key} className="border border">
                 <img
                   id="myImg"
-                  onClick={() => AddImages(x.urls.raw)}
+                  onClick={() => AddImages(x.urls.small)}
                   className="image col-sm-12"
-                  src={x.urls.raw}
+                  src={x.urls.small}
                   height={600}
                   width={800}
                   alt="img"

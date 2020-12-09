@@ -15,6 +15,7 @@ import axios from "axios";
 import SimpleBottomNavigation from "./BottomNav";
 import TopNav from "./TopNav";
 import { Divider } from "@material-ui/core";
+import { API } from "../API/api";
 
 const useStyles = makeStyles({
   list: {
@@ -35,7 +36,7 @@ const MyDrawer = ({ rot, setRot, setCategory, nowFetch, data, setData }) => {
   useEffect(() => {
     const getCategory = async () => {
       await axios
-        .get(`http://localhost:6969/category`, {
+        .get(`${API}/category`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("t")}`,
           },

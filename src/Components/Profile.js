@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
@@ -6,8 +6,8 @@ import TopNav from "./TopNav";
 import { motion } from "framer-motion";
 import BottomNav from "./BottomNav";
 import axios from "axios";
-
-import ObserverWrapper from "@emarketeross/simple-react-intersection-observer";
+import { API } from "../API/api";
+import { Context } from "../States/GlobalStates";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     justifyContent: "space-around",
     overflow: "hidden",
-    backgroundColor: theme.palette.background.paper,
+    //marginTop: -8,
   },
   gridList: {
     width: "100%",
@@ -41,144 +41,129 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   profileRack: {
-    paddingLeft: 30,
-    paddingRight: 30,
+    padding: "10px 0 0px 0",
+    width: 100 + "%",
+    color: "white",
+  },
+  profileRackTile1: {
+    background: "#63539E",
+  },
+  profileRackTile2: {
+    background: "#4873A6",
+  },
+  profileRackTile3: {
+    background: "#63539E",
+  },
+  title: {
+    padding: 20,
+    background: "#FF7FE6",
+    height: 80,
+    color: "white",
   },
 }));
 
-const tileData = [
-  {
-    img:
-      "https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278",
-    title: "Image",
-    author: "author",
-    cols: 2,
-  },
-  {
-    img:
-      "https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278",
-    title: "Image",
-    author: "author",
-    cols: 1,
-  },
-  {
-    img:
-      "https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278",
-    title: "Image",
-    author: "author",
-    cols: 1,
-  },
-  {
-    img:
-      "https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278",
-    title: "Image",
-    author: "author",
-    cols: 2,
-  },
-  {
-    img:
-      "https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278",
-    title: "Image",
-    author: "author",
-    cols: 3,
-  },
-  {
-    img:
-      "https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278",
-    title: "Image",
-    author: "author",
-    cols: 2,
-  },
-  {
-    img:
-      "https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278",
-    title: "Image",
-    author: "author",
-    cols: 1,
-  },
-  {
-    img:
-      "https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278",
-    title: "Image",
-    author: "author",
-    cols: 3,
-  },
-];
 export default function ImageGridList() {
   const classes = useStyles();
   const [data, setData] = useState();
+  const [
+    category,
+    setCategory,
+    dataa,
+    setDataa,
+    rot,
+    setRot,
+    showModal,
+    setShowModal,
+    auth,
+    setAuth,
+  ] = useContext(Context);
 
   const getPosts = async () => {
     await axios
       .post(
-        `http://localhost:6969/profilePosts`,
-        { user_id: 2 },
+        `${API}/profilePosts`,
+        { user_id: 1 },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("t")}`,
           },
         }
       )
-      .then((res) => setData(res.data));
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+        setAuth(200);
+      })
+      .catch((err) => setAuth(err.response.status));
   };
+
   useEffect(() => {
+    if (auth === 401) {
+      setShowModal(true);
+    }
     getPosts();
   }, []);
-  console.log(data);
   let cols = [1, 1, 1, 3];
   return (
     <>
-      <TopNav title="lisa_blink" />
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 20,
-        }}
-      >
-        <div className={classes.profile}>
-          <img
-            alt="Remy Sharp"
-            src="https://cdn.i-scmp.com/sites/default/files/styles/768x768/public/d8/images/methode/2020/01/03/b2e584e8-2df4-11ea-8334-1a17c6a14ef4_image_hires_152432.jpg?itok=4FQSUdpP&v=1578036278"
-            className={classes.large}
-          />
-        </div>
-        <div className={classes.profileContent}>
-          <div className={classes.profileRack}>
-            <h2>489</h2>
-            <p>Ranking</p>
-          </div>
-          <div className={classes.profileRack}>
-            <h2>76</h2>
-            <p>Upvotes</p>
-          </div>
-          <div className={classes.profileRack}>
-            <h2>89</h2>
-            <p>Posts</p>
-          </div>
-        </div>
-        <hr />
-        <h2>Gallery</h2>
-        <div className={classes.root}>
-          <GridList cellHeight={160} className={classes.gridList} cols={3}>
-            {data &&
-              data.map((tile, index) => (
-                <GridListTile key={tile.url} cols={cols[index % 4]}>
-                  <ObserverWrapper>
-                    <img
-                      className="lazy"
-                      src={tile.url}
-                      alt={tile.description}
-                    />
-                  </ObserverWrapper>
-                </GridListTile>
-              ))}
-          </GridList>
-        </div>
-      </motion.div>
-      <BottomNav active={3} />
+      <TopNav title={(dataa && dataa.req) || "Pixi-mesh"} />
+      {auth !== 401 && (
+        <>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+            }}
+          >
+            <div className={classes.profile}>
+              <img
+                alt="Remy Sharp"
+                src="https://i.insider.com/5e820b04671de06758588fb8?width=600&format=jpeg&auto=webp"
+                className={classes.large}
+              />
+            </div>
+            <div className={classes.profileContent}>
+              <div
+                className={`${classes.profileRack} ${classes.profileRackTile1}`}
+              >
+                <h2>489</h2>
+                <p>Ranking</p>
+              </div>
+              <div
+                className={`${classes.profileRack} ${classes.profileRackTile2}`}
+              >
+                <h2>76</h2>
+                <p>Upvotes</p>
+              </div>
+              <div
+                className={`${classes.profileRack} ${classes.profileRackTile3}`}
+              >
+                <h2>89</h2>
+                <p>Posts</p>
+              </div>
+            </div>
+            <h2 className={classes.title}>Gallery</h2>
+            <div className={classes.root}>
+              <GridList cellHeight={160} className={classes.gridList} cols={3}>
+                {data &&
+                  data.map((tile, index) => (
+                    <GridListTile key={tile.url} cols={cols[index % 4]}>
+                      <img
+                        className="lazy"
+                        src={tile.url}
+                        alt={tile.description}
+                      />
+                    </GridListTile>
+                  ))}
+              </GridList>
+            </div>
+          </motion.div>
+        </>
+      )}
+      {!showModal && <BottomNav active={3} />}
     </>
   );
 }

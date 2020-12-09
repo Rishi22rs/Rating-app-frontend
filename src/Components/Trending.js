@@ -9,6 +9,7 @@ import TopNav from "./TopNav";
 import { useHistory } from "react-router-dom";
 import BottomNav from "./BottomNav";
 import Explore from "./Explore";
+import { API } from "../API/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,13 +45,13 @@ export default function Trending() {
   useEffect(() => {
     const getCategory = async () => {
       await axios
-        .get(`http://localhost:6969/category`, {
+        .get(`${API}/category`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("t")}`,
           },
         })
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
           setCate(response.data);
         });
     };
@@ -62,6 +63,65 @@ export default function Trending() {
       <div className={classes.root}>
         <GridList className={classes.gridList} cols={2.5}>
           Trending
+          {cate &&
+            cate.map((tile, key) => (
+              <GridListTile
+                key={tile.img}
+                key={key}
+                onClick={() => {
+                  setCategory(tile.category);
+                  history.push("/");
+                }}
+              >
+                <img src={tile.url} alt="Jennie" />
+                <GridListTileBar
+                  title={`#${tile.category}`}
+                  classes={{
+                    root: classes.titleBar,
+                    title: classes.title,
+                  }}
+                />
+              </GridListTile>
+            ))}
+          {cate &&
+            cate.map((tile, key) => (
+              <GridListTile key={tile.img} key={key}>
+                <img src={tile.url} alt="Jennie" />
+                <GridListTileBar
+                  title={`#${tile.category}`}
+                  classes={{
+                    root: classes.titleBar,
+                    title: classes.title,
+                  }}
+                />
+              </GridListTile>
+            ))}
+          {cate &&
+            cate.map((tile, key) => (
+              <GridListTile key={tile.img} key={key}>
+                <img src={tile.url} alt="Jennie" />
+                <GridListTileBar
+                  title={`#${tile.category}`}
+                  classes={{
+                    root: classes.titleBar,
+                    title: classes.title,
+                  }}
+                />
+              </GridListTile>
+            ))}
+          {cate &&
+            cate.map((tile, key) => (
+              <GridListTile key={tile.img} key={key}>
+                <img src={tile.url} alt="Jennie" />
+                <GridListTileBar
+                  title={`#${tile.category}`}
+                  classes={{
+                    root: classes.titleBar,
+                    title: classes.title,
+                  }}
+                />
+              </GridListTile>
+            ))}
           {cate &&
             cate.map((tile, key) => (
               <GridListTile key={tile.img} key={key}>

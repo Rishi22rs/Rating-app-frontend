@@ -13,6 +13,7 @@ import BottomNav from "./BottomNav";
 import Loader from "react-loader-spinner";
 import ObserverWrapper from "@emarketeross/simple-react-intersection-observer";
 import { FixedSizeList } from "react-window";
+import { API } from "../API/api";
 
 const useStyles = makeStyles((theme) => ({
   offsetTop: {
@@ -62,7 +63,7 @@ export default function Leaderboard() {
   const getLeaderboard = async () => {
     await axios
       .post(
-        `http://localhost:6969/leaderboard`,
+        `${API}/leaderboard`,
         { offset },
         {
           headers: {

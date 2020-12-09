@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import axios from "axios";
 import ObserverWrapper from "@emarketeross/simple-react-intersection-observer";
+import { API } from "../API/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +39,7 @@ export default function Explore() {
   useEffect(() => {
     const getCategory = async () => {
       await axios
-        .get(`http://localhost:6969/explore`, {
+        .get(`${API}/explore`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("t")}`,
           },
@@ -54,15 +55,13 @@ export default function Explore() {
     <div className={classes.root}>
       <GridList cellHeight={200} spacing={1} className={classes.gridList}>
         {data &&
-          data.map((tile) => (
+          data.map((tile, key) => (
             <GridListTile
-              key={tile.img}
+              key={key}
               cols={tile.featured ? 2 : 1}
               rows={tile.featured ? 2 : 1}
             >
-              <ObserverWrapper>
-                <img src={tile.url} alt={tile.category} />
-              </ObserverWrapper>
+              <img src={tile.url} alt={tile.category} />
               <GridListTileBar
                 title={tile.category}
                 titlePosition="top"

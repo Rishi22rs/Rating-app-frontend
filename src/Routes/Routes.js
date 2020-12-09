@@ -19,10 +19,10 @@ const Routes = () => (
   <GlobalStates>
     <Router>
       <Switch>
-        <Route path={`/`} exact component={Login} />
+        <Route path={`/`} exact component={Main} />
         <Route path={`/Signup`} exact component={Signup} />
         <Route path={`/App`} exact component={App} />
-        <Route path={`/Main`} component={Main} />
+        {/* <Route path={`/Main`} component={Main} /> */}
         <Route path={`/Leaderboard`} component={Leaderboard} />
         <Route path={`/Profile/:user`} component={Profile} />
         <Route path={`/Trending`} component={Trending} />
