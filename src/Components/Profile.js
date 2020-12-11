@@ -76,8 +76,10 @@ export default function ImageGridList() {
     setShowModal,
     auth,
     setAuth,
+    userDetails,
+    setUserDetails,
   ] = useContext(Context);
-
+  console.log(userDetails);
   const getPosts = async () => {
     await axios
       .post(
@@ -106,7 +108,7 @@ export default function ImageGridList() {
   let cols = [1, 1, 1, 3];
   return (
     <>
-      <TopNav title={(dataa && dataa.req) || "Pixi-mesh"} />
+      <TopNav title={userDetails && userDetails[0].name} />
       {auth !== 401 && (
         <>
           <motion.div
@@ -163,7 +165,7 @@ export default function ImageGridList() {
           </motion.div>
         </>
       )}
-      {!showModal && <BottomNav active={3} />}
+      {!showModal && <BottomNav active={4} />}
     </>
   );
 }

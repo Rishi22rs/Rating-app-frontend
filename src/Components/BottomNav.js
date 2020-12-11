@@ -6,6 +6,7 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import HomeIcon from "@material-ui/icons/Home";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { useHistory } from "react-router-dom";
 import { Context } from "../States/GlobalStates";
 
@@ -18,6 +19,7 @@ const useStyles = makeStyles({
     background: "#524365",
   },
   btn: {
+    margin: -5,
     outline: "none",
     textDecoration: "none",
     border: "none",
@@ -29,7 +31,7 @@ const useStyles = makeStyles({
   selected: {},
 });
 
-export default function BottomNav({ children, active = 1 }) {
+export default function BottomNav({ children, active = 0 }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(active);
 
@@ -62,20 +64,30 @@ export default function BottomNav({ children, active = 1 }) {
         <BottomNavigationAction
           onClick={() => {
             setShowModal(false);
+            history.push(`/`);
+          }}
+          classes={{ root: classes.btn, selected: classes.selected }}
+          label="Voting"
+          icon={<HomeIcon />}
+        />
+        <BottomNavigationAction
+          onClick={() => {
+            setShowModal(false);
             history.push("/trending");
           }}
           classes={{ root: classes.btn, selected: classes.selected }}
           label="Trending"
           icon={<WhatshotIcon />}
         />
+
         <BottomNavigationAction
           onClick={() => {
             setShowModal(false);
-            history.push(`/`);
+            history.push(`/AddPost`);
           }}
           classes={{ root: classes.btn, selected: classes.selected }}
-          label="Voting"
-          icon={<HomeIcon />}
+          label="Upload"
+          icon={<AddCircleIcon />}
         />
         <BottomNavigationAction
           onClick={() => {

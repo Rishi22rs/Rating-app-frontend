@@ -6,9 +6,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import App from "../App";
+import AddPost from "../Components/AddPost";
 import Leaderboard from "../Components/Leaderboard";
 import Login from "../Components/Login";
 import Main, { location } from "../Components/Main";
+import NewUserSetup from "../Components/NewUserSetup";
 import Profile from "../Components/Profile";
 import Signup from "../Components/Signup";
 import Trending from "../Components/Trending";
@@ -26,6 +28,8 @@ const Routes = () => (
         <Route path={`/Leaderboard`} component={Leaderboard} />
         <Route path={`/Profile/:user`} component={Profile} />
         <Route path={`/Trending`} component={Trending} />
+        <Route path={`/ProfileSetup`} component={NewUserSetup} />
+        <Route path={`/AddPost`} component={AddPost} />
       </Switch>
     </Router>
   </GlobalStates>

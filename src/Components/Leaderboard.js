@@ -136,13 +136,12 @@ export default function Leaderboard() {
                     }
                   />
                 </ListItem>
-                <Divider variant="inset" component="li" />
               </ObserverWrapper>
             ))}
           </List>
         </div>
       )}
-      <BottomNav toggleDrawer={toggleDrawer} active={2} />
+      <BottomNav toggleDrawer={toggleDrawer} active={3} />
     </>
   );
 }

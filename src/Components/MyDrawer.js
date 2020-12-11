@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-
-import axios from "axios";
-import SimpleBottomNavigation from "./BottomNav";
-import TopNav from "./TopNav";
-import { Divider } from "@material-ui/core";
-import { API } from "../API/api";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles({
   list: {
@@ -26,34 +21,10 @@ const useStyles = makeStyles({
   },
 });
 
-const MyDrawer = ({ rot, setRot, setCategory, nowFetch, data, setData }) => {
-  const [cate, setCate] = useState();
-  const matches = useMediaQuery("(min-width:1000px)");
-  const getContentData = async (category) => {
-    setData(await nowFetch(category));
-  };
-
-  useEffect(() => {
-    const getCategory = async () => {
-      await axios
-        .get(`${API}/category`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("t")}`,
-          },
-        })
-        .then((response) => {
-          setCate(response);
-        });
-    };
-    getCategory();
-  }, []);
-
+export default function TemporaryDrawer() {
   const classes = useStyles();
   const [state, setState] = React.useState({
-    top: false,
     left: false,
-    bottom: false,
-    right: false,
   });
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -63,61 +34,51 @@ const MyDrawer = ({ rot, setRot, setCategory, nowFetch, data, setData }) => {
     ) {
       return;
     }
+
     setState({ ...state, [anchor]: open });
   };
+
   const list = (anchor) => (
     <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom",
-      })}
+      className={clsx(classes.list)}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <h2 style={{ margin: 15 }}>Trending tags</h2>
-        <hr />
-        {cate &&
-          cate.data.map((text, index) => (
-            <ListItem
-              onClick={() => {
-                setCategory(text.category);
-                getContentData(text.category);
-                setRot((prev) => prev + 360);
-              }}
-              button
-              key={text.category}
-            >
-              <ListItemText primary={`#${text.category}`} />
-              <p>{text["count(category)"]}</p>
-            </ListItem>
-          ))}
+        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {["All mail", "Trash", "Spam"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
       </List>
     </div>
   );
-  return (
-    <div>
-      <React.Fragment>
-        <Drawer
-          variant={matches ? "permanent" : "temporary"}
-          anchor={"right"}
-          open={state["right"]}
-          onClose={toggleDrawer("right", false)}
-        >
-          {list("right")}
-        </Drawer>
-        <Drawer
-          variant={matches ? "permanent" : "temporary"}
-          anchor={"left"}
-          open={state["left"]}
-          onClose={toggleDrawer("left", false)}
-        >
-          {list("left")}
-        </Drawer>
-      </React.Fragment>
-      {!matches && <SimpleBottomNavigation toggleDrawer={toggleDrawer} />}
-    </div>
-  );
-};
 
-export default MyDrawer;
+  return (
+    <React.Fragment key={"left"}>
+      <MenuIcon onClick={toggleDrawer("left", true)} />
+      <Drawer
+        anchor={"left"}
+        open={state["left"]}
+        onClose={toggleDrawer("left", false)}
+      >
+        {list("left")}
+      </Drawer>
+    </React.Fragment>
+  );
+}

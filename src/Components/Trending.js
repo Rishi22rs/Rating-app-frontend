@@ -167,7 +167,7 @@ export default function Trending() {
       <h3>Explore</h3>
       <hr />
       <Explore />
-      <BottomNav active={0} />
+      <BottomNav active={1} />
     </>
   );
 }

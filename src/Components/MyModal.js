@@ -60,11 +60,6 @@ const MyModal = ({ showModal, setShowModal }) => {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Link to="/">
-                <Button size="small" color="primary" onClick={handleClick}>
-                  Okay
-                </Button>
-              </Link>
               <Button size="small" color="primary">
                 Learn More
               </Button>

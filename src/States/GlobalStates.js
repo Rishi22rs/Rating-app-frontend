@@ -9,6 +9,7 @@ const GlobalStates = ({ children }) => {
   const [rot, setRot] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [auth, setAuth] = useState(401);
+  const [userDetails, setUserDetails] = useState();
 
   return (
     <>
@@ -24,6 +25,8 @@ const GlobalStates = ({ children }) => {
           setShowModal,
           auth,
           setAuth,
+          userDetails,
+          setUserDetails,
         ]}
       >
         <MyModal showModal={showModal} setShowModal={setShowModal} />

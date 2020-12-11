@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -10,6 +10,8 @@ import BottomNav from "./BottomNav";
 import { Context } from "../States/GlobalStates";
 import { API } from "../API/api";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
+import MyDrawer from "./MyDrawer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,9 +27,13 @@ const useStyles = makeStyles((theme) => ({
   offsetTop: {
     marginTop: 70,
   },
+  logged: {
+    textAlign: "center",
+  },
 }));
 
 export default function TopNav({ children, title = "Pixi - mesh" }) {
+  const history = useHistory();
   const [
     category,
     setCategory,
@@ -39,26 +45,51 @@ export default function TopNav({ children, title = "Pixi - mesh" }) {
     setShowModal,
     auth,
     setAuth,
+    userDetails,
+    setUserDetails,
   ] = useContext(Context);
-  const responseGoogle = (response) => {
-    console.log(response.tokenObj.id_token);
-    localStorage.setItem("t", response.tokenObj.id_token);
-    setAuth(200);
+  const [logged, setLogged] = useState("");
+  useEffect(() => {
+    if (localStorage.getItem("t") !== "logged out")
+      Login(localStorage.getItem("t"));
+    if (auth === 401) setLogged("Not Logged In");
+  }, []);
+  const Login = (response) => {
     axios
       .post(
         `${API}/login`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${response.tokenObj.id_token}`,
+            Authorization: `Bearer ${response}`,
           },
         }
       )
-      .then((res) => console.log(res));
+      .then((res) => {
+        if (localStorage.getItem("t") === "logged out") setLogged("Logged In");
+        else setLogged("");
+        localStorage.setItem("t", response);
+        setAuth(200);
+        setShowModal(false);
+        setTimeout(() => {
+          setLogged("");
+        }, 3000);
+        setUserDetails(res.data);
+        console.log(res.data.newUser);
+        if (res.data.newUser === "true") {
+          history.push("/ProfileSetup");
+        }
+      });
+  };
+  const responseGoogle = (response) => {
+    setLogged("Logged In");
+    Login(response.tokenObj.id_token);
   };
   const responseGoogleLogout = () => {
-    localStorage.setItem("t", "logged out");
     setAuth(401);
+    localStorage.setItem("t", "logged out");
+    setShowModal(true);
+    setUserDetails();
   };
   const classes = useStyles();
 
@@ -66,20 +97,14 @@ export default function TopNav({ children, title = "Pixi - mesh" }) {
     <>
       <AppBar className={classes.root} position="fixed">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          ></IconButton>
+          {/* <MyDrawer /> */}
           <Typography variant="h6" className={classes.title}>
             {title}
           </Typography>
-          {/* <MenuIcon /> */}
           {auth === 401 ? (
             <GoogleLogin
               clientId="736304931891-s9bh54hflv1r8upcrd0hokk79p80s5us.apps.googleusercontent.com"
-              buttonText="Login"
+              buttonText="Login/Sign Up"
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
               cookiePolicy={"single_host_origin"}
@@ -93,6 +118,12 @@ export default function TopNav({ children, title = "Pixi - mesh" }) {
             ></GoogleLogout>
           )}
         </Toolbar>
+        <div
+          className={classes.logged}
+          style={auth === 200 ? { background: "green" } : { background: "red" }}
+        >
+          {logged}
+        </div>
       </AppBar>
       <div className={classes.offsetTop}>{children}</div>
       <BottomNav />
