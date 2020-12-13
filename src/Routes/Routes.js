@@ -7,9 +7,10 @@ import {
 } from "react-router-dom";
 import App from "../App";
 import AddPost from "../Components/AddPost";
+import ImgModal from "../Components/ImgModal";
 import Leaderboard from "../Components/Leaderboard";
 import Login from "../Components/Login";
-import Main, { location } from "../Components/Main";
+import Main from "../Components/Main";
 import NewUserSetup from "../Components/NewUserSetup";
 import Profile from "../Components/Profile";
 import Signup from "../Components/Signup";
@@ -22,7 +23,6 @@ const Routes = () => (
     <Router>
       <Switch>
         <Route path={`/`} exact component={Main} />
-        <Route path={`/Signup`} exact component={Signup} />
         <Route path={`/App`} exact component={App} />
         {/* <Route path={`/Main`} component={Main} /> */}
         <Route path={`/Leaderboard`} component={Leaderboard} />
@@ -31,6 +31,7 @@ const Routes = () => (
         <Route path={`/ProfileSetup`} component={NewUserSetup} />
         <Route path={`/AddPost`} component={AddPost} />
       </Switch>
+      <Route path={`/img/:id`} component={ImgModal} />
     </Router>
   </GlobalStates>
 );

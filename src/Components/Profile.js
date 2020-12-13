@@ -3,11 +3,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import TopNav from "./TopNav";
-import { motion } from "framer-motion";
 import BottomNav from "./BottomNav";
 import axios from "axios";
 import { API } from "../API/api";
 import { Context } from "../States/GlobalStates";
+
+import {
+  AnimatePresence,
+  motion,
+  useAnimation,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
+import ImgModal from "./ImgModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,7 +87,8 @@ export default function ImageGridList() {
     userDetails,
     setUserDetails,
   ] = useContext(Context);
-  console.log(userDetails);
+  const [showImgModal, setShowImgModal] = useState(false);
+  const [imgData, setImgData] = useState();
   const getPosts = async () => {
     await axios
       .post(
@@ -99,15 +108,26 @@ export default function ImageGridList() {
       .catch((err) => setAuth(err.response.status));
   };
 
+  const handleImgClick = (imgData) => {
+    setImgData(imgData);
+    setShowImgModal(true);
+  };
+
   useEffect(() => {
     if (auth === 401) {
       setShowModal(true);
     }
     getPosts();
   }, []);
+  console.log(data);
   let cols = [1, 1, 1, 3];
   return (
     <>
+      <ImgModal
+        showImgModal={showImgModal}
+        setShowImgModal={setShowImgModal}
+        imgData={imgData}
+      />
       <TopNav title={userDetails && userDetails[0].name} />
       {auth !== 401 && (
         <>
@@ -154,6 +174,7 @@ export default function ImageGridList() {
                   data.map((tile, index) => (
                     <GridListTile key={tile.url} cols={cols[index % 4]}>
                       <img
+                        onClick={() => handleImgClick(tile)}
                         className="lazy"
                         src={tile.url}
                         alt={tile.description}

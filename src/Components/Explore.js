@@ -8,6 +8,7 @@ import StarBorderIcon from "@material-ui/icons/StarBorder";
 import axios from "axios";
 import ObserverWrapper from "@emarketeross/simple-react-intersection-observer";
 import { API } from "../API/api";
+import ImgModal from "./ImgModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Explore() {
+  const [showImgModal, setShowImgModal] = useState(false);
+  const [imgData, setImgData] = useState();
   const classes = useStyles();
   const [data, setData] = useState();
   useEffect(() => {
@@ -51,34 +54,49 @@ export default function Explore() {
     };
     getCategory();
   }, []);
+  const handleImgClick = (imgData) => {
+    setImgData(imgData);
+    setShowImgModal(true);
+  };
   return (
-    <div className={classes.root}>
-      <GridList cellHeight={200} spacing={1} className={classes.gridList}>
-        {data &&
-          data.map((tile, key) => (
-            <GridListTile
-              key={key}
-              cols={tile.featured ? 2 : 1}
-              rows={tile.featured ? 2 : 1}
-            >
-              <img src={tile.url} alt={tile.category} />
-              <GridListTileBar
-                title={tile.category}
-                titlePosition="top"
-                actionIcon={
-                  <IconButton
-                    aria-label={`star ${tile.name}`}
-                    className={classes.icon}
-                  >
-                    <StarBorderIcon />
-                  </IconButton>
-                }
-                actionPosition="left"
-                className={classes.titleBar}
-              />
-            </GridListTile>
-          ))}
-      </GridList>
-    </div>
+    <>
+      <ImgModal
+        showImgModal={showImgModal}
+        setShowImgModal={setShowImgModal}
+        imgData={imgData}
+      />
+      <div className={classes.root}>
+        <GridList cellHeight={200} spacing={1} className={classes.gridList}>
+          {data &&
+            data.map((tile, key) => (
+              <GridListTile
+                key={key}
+                cols={tile.featured ? 2 : 1}
+                rows={tile.featured ? 2 : 1}
+              >
+                <img
+                  src={tile.url}
+                  alt={tile.category}
+                  onClick={() => handleImgClick(tile)}
+                />
+                <GridListTileBar
+                  title={tile.category}
+                  titlePosition="top"
+                  actionIcon={
+                    <IconButton
+                      aria-label={`star ${tile.name}`}
+                      className={classes.icon}
+                    >
+                      <StarBorderIcon />
+                    </IconButton>
+                  }
+                  actionPosition="left"
+                  className={classes.titleBar}
+                />
+              </GridListTile>
+            ))}
+        </GridList>
+      </div>
+    </>
   );
 }
