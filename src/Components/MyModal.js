@@ -31,6 +31,7 @@ const MyModal = ({ showModal, setShowModal }) => {
           isOpen={showModal}
           style={{
             content: {
+              padding: 0,
               top: "50%",
               left: "50%",
               right: "auto",

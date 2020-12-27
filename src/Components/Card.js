@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -17,11 +17,14 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { useHistory } from "react-router-dom";
 import { Context } from "../States/GlobalStates";
+import InputComments from "./InputComment";
+import axios from "axios";
+import { API } from "../API/api";
+import CommentList from "./CommentList";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 100 + "%",
-    borderRadius: 40,
     background: "#52AFD3",
     color: "#D0FBFD",
   },
@@ -51,44 +54,62 @@ export default function RecipeReviewCard({
   caption = "How you like that",
   handleClick,
   votes = 10,
+  view = 10,
+  image_id = 746,
 }) {
   const history = useHistory();
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [comments, setComments] = useState();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+    getComments();
   };
 
-  const [category, setCategory, data, setData, rot, setRot] = useContext(
-    Context
-  );
+  const getComments = () => {
+    axios
+      .post(`${API}/getComments`, {
+        image_id: image_id,
+      })
+      .then((res) => {
+        setComments(res.data);
+        console.log(res.data);
+      });
+  };
+
+  const [
+    category,
+    setCategory,
+    data,
+    setData,
+    rot,
+    setRot,
+    showModal,
+    setShowModal,
+    auth,
+    setAuth,
+    userDetails,
+    setUserDetails,
+  ] = useContext(Context);
 
   return (
     <Card className={classes.root}>
-      <CardHeader
-        onClick={() => history.push(`/Profile/lisa_blink`)}
-        avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
-            {name && name.charAt(0)}
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={name}
-        subheader="September 14, 2016"
-      />
       <CardMedia className={classes.media} image={url} title={name} />
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites" onClick={handleClick}>
+        <IconButton
+          aria-label="add to favorites"
+          onClick={() => {
+            setExpanded(false);
+            handleClick();
+          }}
+        >
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
+        Attractive: {((votes / view) * 100).toPrecision(2)}%
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
@@ -101,9 +122,32 @@ export default function RecipeReviewCard({
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardHeader
+          onClick={() => history.push(`/Profile/lisa_blink`)}
+          avatar={
+            <Avatar aria-label="recipe" className={classes.avatar}>
+              {name && name.charAt(0)}
+            </Avatar>
+          }
+          action={
+            <IconButton aria-label="settings">
+              <MoreVertIcon />
+            </IconButton>
+          }
+          title={name}
+          subheader="September 14, 2016"
+        />
+        <hr />
         <CardContent>
           <Typography paragraph>{caption}</Typography>
         </CardContent>
+        <CommentList comments={comments} />
+        <InputComments
+          image_id={image_id}
+          userDetails={userDetails}
+          setComments={setComments}
+          comments={comments}
+        />
       </Collapse>
     </Card>
   );

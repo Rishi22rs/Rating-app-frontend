@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
   AnimatePresence,
@@ -13,6 +13,7 @@ import Card from "./Card";
 import { makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { API } from "../API/api";
+import ReactSnapScroll from "react-snap-scroll";
 
 const useStyles = makeStyles((theme) => ({
   offsetBottom: {
@@ -20,10 +21,10 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     height: "100%",
-    scrollSnapAlign: "start",
   },
   card: {
     height: "100%",
+    scrollSnapAlign: "start",
   },
 }));
 
@@ -57,6 +58,10 @@ const Compare = ({
   const controls = useAnimation();
   const history = useHistory();
   const classes = useStyles();
+
+  function callback() {
+    console.log("element snapped");
+  }
 
   const getContentData = async () => {
     let putThis = await nowFetch(category);
@@ -96,13 +101,6 @@ const Compare = ({
     visible: { opacity: 1 },
   };
 
-  const x = useMotionValue(0);
-  const background = useTransform(
-    x,
-    [-100, 0, 100],
-    ["#ff008c", "#7700ff", "rgb(230, 255, 0)"]
-  );
-
   const handleClick = (data) => {
     setRot((prev) => prev + 360);
     if (auth === 200) VoteThis(data && data[0].image_id);
@@ -125,11 +123,13 @@ const Compare = ({
           exit={{ opacity: 0 }}
         >
           <Card
+            image_id={data && data[0].image_id}
             url={data && data[0].url}
             // url={
             //   "https://blackpinkupdate.com/wp-content/uploads/2018/08/BLACKPINK-Jennie-Instagram-Photo-30-August-2018-Disney-Tokyo-3.jpg"
             // }
             votes={data && data[0].votes}
+            views={data && data[0].views}
             name={data && data[0].name}
             caption={data && data[0].description}
             handleClick={() => handleClick(data)}
@@ -148,11 +148,13 @@ const Compare = ({
           }}
         >
           <Card
+            image_id={data && data[1].image_id}
             url={data && data[1].url}
             // url={
             //   "https://i.pinimg.com/originals/fa/bf/30/fabf306efad2f058dcd10c20d9a380d5.jpg"
             // }
             votes={data && data[1].votes}
+            views={data && data[1].views}
             name={data && data[1].name}
             caption={data && data[1].description}
             handleClick={() => handleClick(data)}

@@ -7,6 +7,8 @@ import BottomNav from "./BottomNav";
 import axios from "axios";
 import { API } from "../API/api";
 import { Context } from "../States/GlobalStates";
+import Fab from "@material-ui/core/Fab";
+import EditIcon from "@material-ui/icons/Edit";
 
 import {
   AnimatePresence,
@@ -16,6 +18,7 @@ import {
   useTransform,
 } from "framer-motion";
 import ImgModal from "./ImgModal";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ImageGridList() {
+  const history = useHistory();
   const classes = useStyles();
   const [data, setData] = useState();
   const [
@@ -146,6 +150,13 @@ export default function ImageGridList() {
                 src="https://i.insider.com/5e820b04671de06758588fb8?width=600&format=jpeg&auto=webp"
                 className={classes.large}
               />
+              <Fab
+                color="secondary"
+                aria-label="edit"
+                onClick={() => history.push("/ProfileSetup")}
+              >
+                <EditIcon />
+              </Fab>
             </div>
             <div className={classes.profileContent}>
               <div

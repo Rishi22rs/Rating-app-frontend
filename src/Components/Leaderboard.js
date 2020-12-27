@@ -14,6 +14,7 @@ import Loader from "react-loader-spinner";
 import ObserverWrapper from "@emarketeross/simple-react-intersection-observer";
 import { FixedSizeList } from "react-window";
 import { API } from "../API/api";
+import ImgModal from "./ImgModal";
 
 const useStyles = makeStyles((theme) => ({
   offsetTop: {
@@ -25,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     backgroundColor: "#52AFD3",
-    borderRadius: 25,
     marginBottom: 10,
     color: "white",
   },
@@ -94,11 +94,20 @@ export default function Leaderboard() {
     }
     setState({ ...state, [anchor]: open });
   };
-
+  const [showImgModal, setShowImgModal] = useState(false);
+  const [imgData, setImgData] = useState();
   const Row = (x, index) => <div></div>;
-
+  const handleImgClick = (imgData) => {
+    setImgData(imgData);
+    setShowImgModal(true);
+  };
   return (
     <>
+      <ImgModal
+        showImgModal={showImgModal}
+        setShowImgModal={setShowImgModal}
+        imgData={imgData}
+      />
       <TopNav title="Leaderboard" />
       {isLoading ? (
         <div className={classes.loader}>
@@ -115,7 +124,11 @@ export default function Leaderboard() {
           >
             {data.map((x, index) => (
               <ObserverWrapper>
-                <ListItem alignItems="flex-start" className={classes.listItem}>
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItem}
+                  onClick={() => handleImgClick(x)}
+                >
                   <ListItemAvatar>
                     <Avatar alt="Remy Sharp" src={x.url} />
                   </ListItemAvatar>

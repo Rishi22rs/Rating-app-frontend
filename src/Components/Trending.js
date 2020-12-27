@@ -10,15 +10,18 @@ import { useHistory } from "react-router-dom";
 import BottomNav from "./BottomNav";
 import Explore from "./Explore";
 import { API } from "../API/api";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    zIndex: 400,
     display: "flex",
     flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: "inset 0 0 100px black",
+    justifyContent: "left",
+    overflow: "scroll",
+    padding: "0px 10px 0px 10px",
+    marginBottom: 10,
   },
   gridList: {
     flexWrap: "nowrap",
@@ -61,111 +64,30 @@ export default function Trending() {
     <>
       <TopNav title="Trending" />
       <div className={classes.root}>
-        <GridList className={classes.gridList} cols={2.5}>
-          Trending
+        <ButtonGroup
+          variant="text"
+          color="primary"
+          aria-label="text primary button group"
+        >
           {cate &&
             cate.map((tile, key) => (
-              <GridListTile
-                key={tile.img}
-                key={key}
+              <Button
                 onClick={() => {
                   setCategory(tile.category);
                   history.push("/");
                 }}
               >
-                <img src={tile.url} alt="Jennie" />
-                <GridListTileBar
-                  title={`#${tile.category}`}
-                  classes={{
-                    root: classes.titleBar,
-                    title: classes.title,
-                  }}
-                />
-              </GridListTile>
+                #{tile.category}
+              </Button>
             ))}
-          {cate &&
-            cate.map((tile, key) => (
-              <GridListTile key={tile.img} key={key}>
-                <img src={tile.url} alt="Jennie" />
-                <GridListTileBar
-                  title={`#${tile.category}`}
-                  classes={{
-                    root: classes.titleBar,
-                    title: classes.title,
-                  }}
-                />
-              </GridListTile>
-            ))}
-          {cate &&
-            cate.map((tile, key) => (
-              <GridListTile key={tile.img} key={key}>
-                <img src={tile.url} alt="Jennie" />
-                <GridListTileBar
-                  title={`#${tile.category}`}
-                  classes={{
-                    root: classes.titleBar,
-                    title: classes.title,
-                  }}
-                />
-              </GridListTile>
-            ))}
-          {cate &&
-            cate.map((tile, key) => (
-              <GridListTile key={tile.img} key={key}>
-                <img src={tile.url} alt="Jennie" />
-                <GridListTileBar
-                  title={`#${tile.category}`}
-                  classes={{
-                    root: classes.titleBar,
-                    title: classes.title,
-                  }}
-                />
-              </GridListTile>
-            ))}
-          {cate &&
-            cate.map((tile, key) => (
-              <GridListTile key={tile.img} key={key}>
-                <img src={tile.url} alt="Jennie" />
-                <GridListTileBar
-                  title={`#${tile.category}`}
-                  classes={{
-                    root: classes.titleBar,
-                    title: classes.title,
-                  }}
-                />
-              </GridListTile>
-            ))}
-          {cate &&
-            cate.map((tile, key) => (
-              <GridListTile key={tile.img} key={key}>
-                <img src={tile.url} alt="Jennie" />
-                <GridListTileBar
-                  title={`#${tile.category}`}
-                  classes={{
-                    root: classes.titleBar,
-                    title: classes.title,
-                  }}
-                />
-              </GridListTile>
-            ))}
-          {cate &&
-            cate.map((tile, key) => (
-              <GridListTile key={tile.img} key={key}>
-                <img src={tile.url} alt="Jennie" />
-                <GridListTileBar
-                  title={`#${tile.category}`}
-                  classes={{
-                    root: classes.titleBar,
-                    title: classes.title,
-                  }}
-                />
-              </GridListTile>
-            ))}
-        </GridList>
+          {cate && cate.map((tile, key) => <Button>#{tile.category}</Button>)}
+          {cate && cate.map((tile, key) => <Button>#{tile.category}</Button>)}
+          {cate && cate.map((tile, key) => <Button>#{tile.category}</Button>)}
+          {cate && cate.map((tile, key) => <Button>#{tile.category}</Button>)}
+          {cate && cate.map((tile, key) => <Button>#{tile.category}</Button>)}
+          {cate && cate.map((tile, key) => <Button>#{tile.category}</Button>)}
+        </ButtonGroup>
       </div>
-      <hr />
-      <h3>Explore</h3>
-      <hr />
       <Explore />
       <BottomNav active={1} />
     </>

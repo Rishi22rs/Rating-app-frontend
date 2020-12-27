@@ -12,6 +12,7 @@ import { API } from "../API/api";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import MyDrawer from "./MyDrawer";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +33,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TopNav({ children, title = "Pixi - mesh" }) {
+export default function TopNav({
+  children,
+  title = "Pixi - mesh",
+  disableBottom = false,
+  showBack = false,
+  location = `/Profile`,
+}) {
   const history = useHistory();
   const [
     category,
@@ -97,6 +104,19 @@ export default function TopNav({ children, title = "Pixi - mesh" }) {
     <>
       <AppBar className={classes.root} position="fixed">
         <Toolbar>
+          {showBack && (
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+              onClick={() => {
+                history.goBack();
+              }}
+            >
+              <KeyboardBackspaceIcon />
+            </IconButton>
+          )}
           {/* <MyDrawer /> */}
           <Typography variant="h6" className={classes.title}>
             {title}
@@ -126,7 +146,7 @@ export default function TopNav({ children, title = "Pixi - mesh" }) {
         </div>
       </AppBar>
       <div className={classes.offsetTop}>{children}</div>
-      <BottomNav />
+      {!disableBottom && <BottomNav />}
     </>
   );
 }
