@@ -13,7 +13,6 @@ import Card from "./Card";
 import { makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { API } from "../API/api";
-import ReactSnapScroll from "react-snap-scroll";
 
 const useStyles = makeStyles((theme) => ({
   offsetBottom: {
@@ -55,18 +54,19 @@ const Compare = ({
   showModal,
   setShowModal,
 }) => {
-  const controls = useAnimation();
   const history = useHistory();
   const classes = useStyles();
-
-  function callback() {
-    console.log("element snapped");
-  }
-
+  const [showAtt, setShowAtt] = useState(false);
+  const [nextMove, setNextMove] = useState(true);
   const getContentData = async () => {
     let putThis = await nowFetch(category);
     console.log(putThis);
-    setTimeout(() => setData(putThis), 1000);
+    setShowAtt(true);
+    setTimeout(() => {
+      setShowAtt(false);
+      setData(putThis);
+      setNextMove(true);
+    }, 3000);
   };
   useEffect(() => {
     console.log(auth);
@@ -102,6 +102,7 @@ const Compare = ({
   };
 
   const handleClick = (data) => {
+    setNextMove(false);
     setRot((prev) => prev + 360);
     if (auth === 200) VoteThis(data && data[0].image_id);
     else setShowModal(true);
@@ -123,6 +124,7 @@ const Compare = ({
           exit={{ opacity: 0 }}
         >
           <Card
+            auth={auth}
             image_id={data && data[0].image_id}
             url={data && data[0].url}
             // url={
@@ -133,6 +135,9 @@ const Compare = ({
             name={data && data[0].name}
             caption={data && data[0].description}
             handleClick={() => handleClick(data)}
+            showAtt={showAtt}
+            nextMove={nextMove}
+            below={true}
           />
         </motion.div>
         <br />
@@ -148,6 +153,7 @@ const Compare = ({
           }}
         >
           <Card
+            auth={auth}
             image_id={data && data[1].image_id}
             url={data && data[1].url}
             // url={
@@ -158,6 +164,8 @@ const Compare = ({
             name={data && data[1].name}
             caption={data && data[1].description}
             handleClick={() => handleClick(data)}
+            showAtt={showAtt}
+            nextMove={nextMove}
           />
         </motion.div>
       </Container>

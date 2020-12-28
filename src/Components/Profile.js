@@ -128,6 +128,7 @@ export default function ImageGridList() {
   return (
     <>
       <ImgModal
+        auth={auth}
         showImgModal={showImgModal}
         setShowImgModal={setShowImgModal}
         imgData={imgData}

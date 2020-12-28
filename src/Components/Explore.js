@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Explore() {
+export default function Explore({ auth, userDetails }) {
   const [showImgModal, setShowImgModal] = useState(false);
   const [imgData, setImgData] = useState();
   const classes = useStyles();
@@ -59,6 +59,8 @@ export default function Explore() {
   return (
     <>
       <ImgModal
+        userDetails={userDetails}
+        auth={auth}
         showImgModal={showImgModal}
         setShowImgModal={setShowImgModal}
         imgData={imgData}

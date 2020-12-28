@@ -21,11 +21,11 @@ import InputComments from "./InputComment";
 import axios from "axios";
 import { API } from "../API/api";
 import CommentList from "./CommentList";
+import { useDoubleTap } from "use-double-tap";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 100 + "%",
-    background: "#52AFD3",
     color: "#D0FBFD",
   },
   media: {
@@ -45,6 +45,11 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
   },
+  att: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 30,
+  },
 }));
 
 export default function RecipeReviewCard({
@@ -56,14 +61,19 @@ export default function RecipeReviewCard({
   votes = 10,
   view = 10,
   image_id = 746,
+  color = "#52AFD3",
+  below = false,
+  showAtt = false,
+  nextMove = false,
 }) {
   const history = useHistory();
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-  const [comments, setComments] = useState();
+  const [comments, setComments] = useState([]);
 
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+    setTimeout(() => setExpanded(!expanded), 100);
+
     getComments();
   };
 
@@ -74,7 +84,6 @@ export default function RecipeReviewCard({
       })
       .then((res) => {
         setComments(res.data);
-        console.log(res.data);
       });
   };
 
@@ -93,35 +102,42 @@ export default function RecipeReviewCard({
     setUserDetails,
   ] = useContext(Context);
 
+  const bind = useDoubleTap(() => {
+    if (nextMove) {
+      setExpanded(false);
+      handleClick();
+    }
+  });
+
   return (
-    <Card className={classes.root}>
-      <CardMedia className={classes.media} image={url} title={name} />
-      <CardActions disableSpacing>
-        <IconButton
-          aria-label="add to favorites"
-          onClick={() => {
-            setExpanded(false);
-            handleClick();
-          }}
-        >
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        Attractive: {((votes / view) * 100).toPrecision(2)}%
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-      </CardActions>
+    <Card className={classes.root} style={{ background: color }} {...bind}>
+      {showAtt && !below && (
+        <div className={classes.att}>
+          Attractive: {((votes / view) * 100).toPrecision(2)}%
+        </div>
+      )}
+      <CardMedia
+        className={classes.media}
+        image={url}
+        title={name}
+        onClick={handleExpandClick}
+      />
+
       <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardActions disableSpacing>
+          <IconButton
+            aria-label="add to favorites"
+            onClick={() => {
+              setExpanded(false);
+              handleClick();
+            }}
+          >
+            <FavoriteIcon />
+          </IconButton>
+          <IconButton aria-label="share">
+            <ShareIcon />
+          </IconButton>
+        </CardActions>
         <CardHeader
           onClick={() => history.push(`/Profile/lisa_blink`)}
           avatar={
@@ -143,12 +159,19 @@ export default function RecipeReviewCard({
         </CardContent>
         <CommentList comments={comments} />
         <InputComments
+          auth={auth}
+          setShowModal={setShowModal}
           image_id={image_id}
           userDetails={userDetails}
           setComments={setComments}
           comments={comments}
         />
       </Collapse>
+      {showAtt && below && (
+        <div className={classes.att}>
+          Attractive: {((votes / view) * 100).toPrecision(2)}%
+        </div>
+      )}
     </Card>
   );
 }

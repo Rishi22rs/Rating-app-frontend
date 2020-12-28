@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -12,18 +12,26 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: "100%",
-    backgroundColor: "#52AFD3",
+    maxHeight: "200px",
+    overflowY: "scroll",
   },
   inline: {
     display: "inline",
   },
 }));
 
-export default function CommentList({ comments }) {
+export default function CommentList({ comments, color = "#52AFD3" }) {
   const classes = useStyles();
+  console.log(comments);
+
+  useEffect(() => {
+    ref.current.scrollIntoView({ behavior: "smooth" });
+  });
+
+  const ref = useRef();
 
   return (
-    <List className={classes.root}>
+    <List className={classes.root} style={{ backgroundColor: color }}>
       {comments &&
         comments.map((x) => (
           <>
@@ -39,6 +47,7 @@ export default function CommentList({ comments }) {
             <Divider variant="inset" component="li" />
           </>
         ))}
+      <div ref={ref}></div>
     </List>
   );
 }

@@ -40,9 +40,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Trending() {
   const classes = useStyles();
-  const [category, setCategory, data, setData, rot, setRot] = useContext(
-    Context
-  );
+  const [
+    category,
+    setCategory,
+    data,
+    setData,
+    rot,
+    setRot,
+    showModal,
+    setShowModal,
+    auth,
+    setAuth,
+    userDetails,
+    setUserDetails,
+  ] = useContext(Context);
   const [cate, setCate] = useState();
   const history = useHistory();
   useEffect(() => {
@@ -60,6 +71,7 @@ export default function Trending() {
     };
     getCategory();
   }, []);
+  console.log("auth", auth);
   return (
     <>
       <TopNav title="Trending" />
@@ -88,7 +100,7 @@ export default function Trending() {
           {cate && cate.map((tile, key) => <Button>#{tile.category}</Button>)}
         </ButtonGroup>
       </div>
-      <Explore />
+      <Explore auth={auth} userDetails={userDetails} />
       <BottomNav active={1} />
     </>
   );

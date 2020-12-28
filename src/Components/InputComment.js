@@ -37,6 +37,7 @@ export default function InputComments({
   userDetails,
   setComments,
   comments,
+  auth,
 }) {
   const classes = useStyles();
   const [value, setValue] = React.useState("");
@@ -95,13 +96,15 @@ export default function InputComments({
               className: classes.input,
             }}
             id="outlined-textarea"
-            label="Comment"
+            disabled={auth == 200 ? false : true}
+            label={auth == 200 ? "Comment" : "Login to comment"}
             placeholder="Here you go"
             multiline
             variant="outlined"
             value={value}
           />
           <Button
+            disabled={auth == 200 ? false : true}
             variant="contained"
             className={classes.btn}
             onClick={addComment}

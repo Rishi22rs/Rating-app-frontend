@@ -19,16 +19,27 @@ import {
 import axios from "axios";
 import { API } from "../API/api";
 import CommentList from "./CommentList";
+import InputComments from "./InputComment";
 Modal.setAppElement("#imgmodal");
 
 const useStyles = makeStyles({
   root: {
+    overflowY: "scroll",
     maxWidth: 345,
+    maxHeight: window.innerHeight - 50,
   },
 });
 
-const ImgModal = ({ showImgModal, setShowImgModal, imgData }) => {
+const ImgModal = ({
+  showImgModal,
+  setShowImgModal,
+  imgData,
+  auth,
+  userDetails,
+}) => {
   const [comments, setComments] = useState();
+
+  console.log(userDetails);
 
   const getComments = () => {
     axios
@@ -41,13 +52,17 @@ const ImgModal = ({ showImgModal, setShowImgModal, imgData }) => {
       });
   };
 
+  console.log(imgData);
+
   useEffect(() => {
     if (showImgModal == true) getComments();
   }, [showImgModal]);
 
+  console.log(auth);
+
   const classes = useStyles();
   return (
-    <div style={{ zIndex: 9000 }} onClick={() => setShowImgModal(false)}>
+    <div style={{ zIndex: 9000 }}>
       <Modal
         isOpen={showImgModal}
         style={{
@@ -65,6 +80,7 @@ const ImgModal = ({ showImgModal, setShowImgModal, imgData }) => {
         <Card className={classes.root}>
           <CardActionArea>
             <CardMedia
+              onClick={() => setShowImgModal(false)}
               component="img"
               alt="Jenni"
               height="300"
@@ -80,7 +96,14 @@ const ImgModal = ({ showImgModal, setShowImgModal, imgData }) => {
               {imgData && imgData.description}
             </Typography>
           </CardContent>
-          <CommentList comments={comments} />
+          <CommentList comments={comments} color="white" />
+          <InputComments
+            auth={auth}
+            image_id={imgData && imgData.image_id}
+            userDetails={userDetails}
+            setComments={setComments}
+            comments={comments}
+          />
           <CardActions>
             <Button
               size="small"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -15,6 +15,7 @@ import ObserverWrapper from "@emarketeross/simple-react-intersection-observer";
 import { FixedSizeList } from "react-window";
 import { API } from "../API/api";
 import ImgModal from "./ImgModal";
+import { Context } from "../States/GlobalStates";
 
 const useStyles = makeStyles((theme) => ({
   offsetTop: {
@@ -51,6 +52,21 @@ export default function Leaderboard() {
   useEffect(() => {
     getLeaderboard();
   }, []);
+
+  const [
+    category,
+    setCategory,
+    dataa,
+    setDataa,
+    rot,
+    setRot,
+    showModal,
+    setShowModal,
+    auth,
+    setAuth,
+    userDetails,
+    setUserDetails,
+  ] = useContext(Context);
 
   // window.addEventListener("scroll", (event) => {
   //   console.log(window.pageYOffset, pageOffset);
@@ -96,7 +112,7 @@ export default function Leaderboard() {
   };
   const [showImgModal, setShowImgModal] = useState(false);
   const [imgData, setImgData] = useState();
-  const Row = (x, index) => <div></div>;
+
   const handleImgClick = (imgData) => {
     setImgData(imgData);
     setShowImgModal(true);
@@ -104,6 +120,8 @@ export default function Leaderboard() {
   return (
     <>
       <ImgModal
+        auth={auth}
+        userDetails={userDetails}
         showImgModal={showImgModal}
         setShowImgModal={setShowImgModal}
         imgData={imgData}
