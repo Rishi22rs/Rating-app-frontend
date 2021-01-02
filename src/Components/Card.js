@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 100 + "%",
     color: "#D0FBFD",
+    marginLeft: window.innerWidth > 1000 && 100,
   },
   media: {
     height: 0,
@@ -63,7 +64,8 @@ export default function RecipeReviewCard({
   image_id = 746,
   color = "#52AFD3",
   below = false,
-  showAtt = false,
+  showAtt,
+  setShowAtt,
   nextMove = false,
 }) {
   const history = useHistory();
@@ -72,8 +74,9 @@ export default function RecipeReviewCard({
   const [comments, setComments] = useState([]);
 
   const handleExpandClick = () => {
-    setTimeout(() => setExpanded(!expanded), 100);
-
+    if (window.innerWidth < 1000) {
+      setTimeout(() => setExpanded(!expanded), 100);
+    }
     getComments();
   };
 
@@ -86,6 +89,12 @@ export default function RecipeReviewCard({
         setComments(res.data);
       });
   };
+  useEffect(() => {
+    if (window.innerWidth > 1000) {
+      setExpanded(true);
+    }
+    getComments();
+  }, [image_id]);
 
   const [
     category,
@@ -103,8 +112,11 @@ export default function RecipeReviewCard({
   ] = useContext(Context);
 
   const bind = useDoubleTap(() => {
+    setShowAtt(true);
     if (nextMove) {
-      setExpanded(false);
+      if (window.innerWidth < 1000) {
+        setTimeout(() => setExpanded(!expanded), 100);
+      }
       handleClick();
     }
   });
@@ -128,7 +140,10 @@ export default function RecipeReviewCard({
           <IconButton
             aria-label="add to favorites"
             onClick={() => {
-              setExpanded(false);
+              if (window.innerWidth < 1000) {
+                setExpanded(false);
+              }
+              setShowAtt(true);
               handleClick();
             }}
           >

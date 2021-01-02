@@ -10,6 +10,7 @@ const GlobalStates = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [auth, setAuth] = useState(401);
   const [userDetails, setUserDetails] = useState();
+  const [showLoader, setShowLoader] = useState(false);
 
   return (
     <>
@@ -27,6 +28,8 @@ const GlobalStates = ({ children }) => {
           setAuth,
           userDetails,
           setUserDetails,
+          showLoader,
+          setShowLoader,
         ]}
       >
         <MyModal showModal={showModal} setShowModal={setShowModal} />

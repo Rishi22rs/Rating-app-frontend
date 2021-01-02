@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -22,32 +22,33 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CommentList({ comments, color = "#52AFD3" }) {
   const classes = useStyles();
-  console.log(comments);
 
   useEffect(() => {
     ref.current.scrollIntoView({ behavior: "smooth" });
-  });
+  }, [comments]);
 
   const ref = useRef();
 
   return (
-    <List className={classes.root} style={{ backgroundColor: color }}>
-      {comments &&
-        comments.map((x) => (
-          <>
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-              </ListItemAvatar>
-              <ListItemText
-                primary={x.name}
-                secondary={<React.Fragment>{x.comment}</React.Fragment>}
-              />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-          </>
-        ))}
-      <div ref={ref}></div>
-    </List>
+    <>
+      <Divider />
+      <List className={classes.root} style={{ backgroundColor: color }}>
+        {comments &&
+          comments.map((x) => (
+            <>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={x.name}
+                  secondary={<React.Fragment>{x.comment}</React.Fragment>}
+                />
+              </ListItem>
+            </>
+          ))}
+        <div ref={ref}></div>
+      </List>
+    </>
   );
 }

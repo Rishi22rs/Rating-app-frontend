@@ -17,8 +17,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   gridList: {
-    width: 500,
-    height: window.innerHeight - 150,
+    overflow: "hidden",
+    width: 900,
+    height: 100 + "%",
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: "translateZ(0)",
   },
@@ -32,12 +33,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Explore({ auth, userDetails }) {
+export default function Explore({ auth, userDetails, setShowLoader }) {
   const [showImgModal, setShowImgModal] = useState(false);
   const [imgData, setImgData] = useState();
   const classes = useStyles();
   const [data, setData] = useState();
   useEffect(() => {
+    setShowLoader(true);
     const getCategory = async () => {
       await axios
         .get(`${API}/explore`, {
@@ -46,6 +48,7 @@ export default function Explore({ auth, userDetails }) {
           },
         })
         .then((response) => {
+          setShowLoader(false);
           console.log(response);
           setData(response.data);
         });

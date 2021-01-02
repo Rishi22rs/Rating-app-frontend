@@ -21,17 +21,25 @@ import ImgModal from "./ImgModal";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
+  // root: {
+  //   display: "flex",
+  //   flexWrap: "wrap",
+  //   justifyContent: "space-around",
+  //   overflow: "hidden",
+  //   //marginTop: -8,
+  // },
   root: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-    //marginTop: -8,
-  },
-  gridList: {
+    position: "relative",
+    maxWidth: "900px" /* Your required width here. */,
     width: "100%",
+    left: "50%",
+    transform: "translateX(-50%)",
     height: "100%",
   },
+  // gridList: {
+  //   width: "100%",
+  //   height: "100%",
+  // },
   profile: {
     position: "relative",
     display: "flex",
@@ -90,10 +98,13 @@ export default function ImageGridList() {
     setAuth,
     userDetails,
     setUserDetails,
+    showLoader,
+    setShowLoader,
   ] = useContext(Context);
   const [showImgModal, setShowImgModal] = useState(false);
   const [imgData, setImgData] = useState();
   const getPosts = async () => {
+    setShowLoader(true);
     await axios
       .post(
         `${API}/profilePosts`,
@@ -108,6 +119,7 @@ export default function ImageGridList() {
         console.log(res.data);
         setData(res.data);
         setAuth(200);
+        setShowLoader(false);
       })
       .catch((err) => setAuth(err.response.status));
   };
@@ -136,15 +148,7 @@ export default function ImageGridList() {
       <TopNav title={userDetails && userDetails[0].name} />
       {auth !== 401 && (
         <>
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 20,
-            }}
-          >
+          <div className={classes.root}>
             <div className={classes.profile}>
               <img
                 alt="Remy Sharp"
@@ -180,7 +184,7 @@ export default function ImageGridList() {
               </div>
             </div>
             <h2 className={classes.title}>Gallery</h2>
-            <div className={classes.root}>
+            <div>
               <GridList cellHeight={160} className={classes.gridList} cols={3}>
                 {data &&
                   data.map((tile, index) => (
@@ -195,10 +199,10 @@ export default function ImageGridList() {
                   ))}
               </GridList>
             </div>
-          </motion.div>
+          </div>
         </>
       )}
-      {!showModal && <BottomNav active={4} />}
+      {window.innerWidth < 1000 && <BottomNav active={4} />}
     </>
   );
 }

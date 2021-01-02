@@ -13,19 +13,21 @@ import Card from "./Card";
 import { makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { API } from "../API/api";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 const useStyles = makeStyles((theme) => ({
-  offsetBottom: {
-    marginBottom: 70,
-  },
+  offsetBottom: {},
   container: {
+    display: window.innerWidth < 1200 ? "" : "flex",
+    marginBottom: 70,
     height: "100%",
   },
   card: {
+    // margin: 200,
     height: "100%",
-    scrollSnapAlign: "start",
   },
 }));
+console.log(window.innerWidth);
 
 export const nowFetch = async (category) => {
   const response = await axios.post(
@@ -39,7 +41,6 @@ export const nowFetch = async (category) => {
       },
     }
   );
-  console.log(response.data);
   return response.data;
 };
 const Compare = ({
@@ -53,21 +54,24 @@ const Compare = ({
   setAuth,
   showModal,
   setShowModal,
+  showLoader,
+  setShowLoader,
 }) => {
   const history = useHistory();
   const classes = useStyles();
   const [showAtt, setShowAtt] = useState(false);
   const [nextMove, setNextMove] = useState(true);
   const getContentData = async () => {
+    setShowLoader(true);
     let putThis = await nowFetch(category);
-    console.log(putThis);
-    setShowAtt(true);
     setTimeout(() => {
       setShowAtt(false);
       setData(putThis);
       setNextMove(true);
+      setShowLoader(false);
     }, 3000);
   };
+  window.scrollTo(0, 0);
   useEffect(() => {
     console.log(auth);
     getContentData();
@@ -96,11 +100,6 @@ const Compare = ({
     getContentData();
   };
 
-  const variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
-
   const handleClick = (data) => {
     setNextMove(false);
     setRot((prev) => prev + 360);
@@ -109,67 +108,71 @@ const Compare = ({
   };
 
   return (
-    <div className={classes.offsetBottom}>
-      <Container maxWidth="sm" className={classes.container}>
-        <motion.div
-          className={classes.card}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1, rotate: rot }}
-          transition={{
-            type: "spring",
-            stiffness: 200,
-            damping: 20,
-            delay: 1,
-          }}
-          exit={{ opacity: 0 }}
-        >
-          <Card
-            auth={auth}
-            image_id={data && data[0].image_id}
-            url={data && data[0].url}
-            // url={
-            //   "https://blackpinkupdate.com/wp-content/uploads/2018/08/BLACKPINK-Jennie-Instagram-Photo-30-August-2018-Disney-Tokyo-3.jpg"
-            // }
-            votes={data && data[0].votes}
-            views={data && data[0].views}
-            name={data && data[0].name}
-            caption={data && data[0].description}
-            handleClick={() => handleClick(data)}
-            showAtt={showAtt}
-            nextMove={nextMove}
-            below={true}
-          />
-        </motion.div>
-        <br />
-        <motion.div
-          className={classes.card}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1, rotate: rot }}
-          transition={{
-            type: "spring",
-            stiffness: 200,
-            damping: 20,
-            delay: 1,
-          }}
-        >
-          <Card
-            auth={auth}
-            image_id={data && data[1].image_id}
-            url={data && data[1].url}
-            // url={
-            //   "https://i.pinimg.com/originals/fa/bf/30/fabf306efad2f058dcd10c20d9a380d5.jpg"
-            // }
-            votes={data && data[1].votes}
-            views={data && data[1].views}
-            name={data && data[1].name}
-            caption={data && data[1].description}
-            handleClick={() => handleClick(data)}
-            showAtt={showAtt}
-            nextMove={nextMove}
-          />
-        </motion.div>
-      </Container>
-    </div>
+    <Container
+      maxWidth={
+        window.innerWidth > 1300 ? "lg" : window.innerWidth < 1200 ? "sm" : "md"
+      }
+      className={classes.container}
+    >
+      <motion.div
+        className={classes.card}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1, rotate: rot }}
+        transition={{
+          type: "spring",
+          stiffness: 200,
+          damping: 20,
+          delay: 0.5,
+        }}
+      >
+        <Card
+          auth={auth}
+          image_id={data && data[0].image_id}
+          url={data && data[0].url}
+          // url={
+          //   "https://blackpinkupdate.com/wp-content/uploads/2018/08/BLACKPINK-Jennie-Instagram-Photo-30-August-2018-Disney-Tokyo-3.jpg"
+          // }
+          votes={data && data[0].votes}
+          views={data && data[0].views}
+          name={data && data[0].name}
+          caption={data && data[0].description}
+          handleClick={() => handleClick(data)}
+          showAtt={showAtt}
+          setShowAtt={setShowAtt}
+          nextMove={nextMove}
+          below={window.innerWidth < 1000 ? true : false}
+        />
+      </motion.div>
+      <br />
+      <motion.div
+        className={classes.card}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1, rotate: rot }}
+        transition={{
+          type: "spring",
+          stiffness: 200,
+          damping: 20,
+          delay: 0.5,
+        }}
+      >
+        <Card
+          auth={auth}
+          image_id={data && data[1].image_id}
+          url={data && data[1].url}
+          // url={
+          //   "https://i.pinimg.com/originals/fa/bf/30/fabf306efad2f058dcd10c20d9a380d5.jpg"
+          // }
+          votes={data && data[1].votes}
+          views={data && data[1].views}
+          name={data && data[1].name}
+          caption={data && data[1].description}
+          handleClick={() => handleClick(data)}
+          showAtt={showAtt}
+          setShowAtt={setShowAtt}
+          nextMove={nextMove}
+        />
+      </motion.div>
+    </Container>
   );
 };
 

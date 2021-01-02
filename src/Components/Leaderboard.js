@@ -23,7 +23,11 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 50,
   },
   root: {
+    position: "relative",
+    maxWidth: "900px" /* Your required width here. */,
     width: "100%",
+    left: "50%",
+    transform: "translateX(-50%)",
   },
   listItem: {
     backgroundColor: "#52AFD3",
@@ -66,6 +70,8 @@ export default function Leaderboard() {
     setAuth,
     userDetails,
     setUserDetails,
+    showLoader,
+    setShowLoader,
   ] = useContext(Context);
 
   // window.addEventListener("scroll", (event) => {
@@ -77,6 +83,7 @@ export default function Leaderboard() {
   // });
 
   const getLeaderboard = async () => {
+    setShowLoader(true);
     await axios
       .post(
         `${API}/leaderboard`,
@@ -90,7 +97,7 @@ export default function Leaderboard() {
       .then((res) => {
         console.log("pure", res.data);
         setData(res.data);
-        setIsLoading(false);
+        setShowLoader(false);
       });
   };
   console.log(data);
@@ -127,52 +134,50 @@ export default function Leaderboard() {
         imgData={imgData}
       />
       <TopNav title="Leaderboard" />
-      {isLoading ? (
-        <div className={classes.loader}>
-          <Loader type="Puff" color="black" height={50} width={100} />
-        </div>
-      ) : (
-        <div className={classes.container} className={classes.offsetTop}>
-          <List
-            height={150}
-            itemCount={1000}
-            itemSize={35}
-            width={300}
-            className={classes.root}
-          >
-            {data.map((x, index) => (
-              <ObserverWrapper>
-                <ListItem
-                  alignItems="flex-start"
-                  className={classes.listItem}
-                  onClick={() => handleImgClick(x)}
-                >
-                  <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src={x.url} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${x.votes} Upvotes`}
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          className={classes.inline}
-                          color="textPrimary"
-                        >
-                          {index + 1}
-                        </Typography>
-                        {" — I'll be in your neighborhood doing errands this…"}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-              </ObserverWrapper>
-            ))}
-          </List>
-        </div>
+
+      <div className={classes.container} className={classes.offsetTop}>
+        <List
+          height={150}
+          itemCount={1000}
+          itemSize={35}
+          width={300}
+          className={classes.root}
+        >
+          {data.map((x, index) => (
+            <ObserverWrapper>
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItem}
+                onClick={() => handleImgClick(x)}
+              >
+                <ListItemAvatar>
+                  <Avatar alt="Remy Sharp" src={x.url} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={`${x.votes} Upvotes`}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        className={classes.inline}
+                        color="textPrimary"
+                      >
+                        {index + 1}
+                      </Typography>
+                      {" — I'll be in your neighborhood doing errands this…"}
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+            </ObserverWrapper>
+          ))}
+        </List>
+      </div>
+
+      {window.innerWidth < 1000 && (
+        <BottomNav toggleDrawer={toggleDrawer} active={3} />
       )}
-      <BottomNav toggleDrawer={toggleDrawer} active={3} />
     </>
   );
 }

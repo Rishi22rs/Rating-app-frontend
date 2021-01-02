@@ -15,13 +15,12 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    zIndex: 400,
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "left",
     overflow: "scroll",
-    padding: "0px 10px 0px 10px",
-    marginBottom: 10,
+    position: "relative",
+    maxWidth: "900px" /* Your required width here. */,
+    width: "100%",
+    left: "50%",
+    transform: "translateX(-50%)",
   },
   gridList: {
     flexWrap: "nowrap",
@@ -53,10 +52,13 @@ export default function Trending() {
     setAuth,
     userDetails,
     setUserDetails,
+    showLoader,
+    setShowLoader,
   ] = useContext(Context);
   const [cate, setCate] = useState();
   const history = useHistory();
   useEffect(() => {
+    setShowLoader(true);
     const getCategory = async () => {
       await axios
         .get(`${API}/category`, {
@@ -65,6 +67,7 @@ export default function Trending() {
           },
         })
         .then((response) => {
+          setShowLoader(false);
           console.log(response.data);
           setCate(response.data);
         });
@@ -100,8 +103,12 @@ export default function Trending() {
           {cate && cate.map((tile, key) => <Button>#{tile.category}</Button>)}
         </ButtonGroup>
       </div>
-      <Explore auth={auth} userDetails={userDetails} />
-      <BottomNav active={1} />
+      <Explore
+        auth={auth}
+        userDetails={userDetails}
+        setShowLoader={setShowLoader}
+      />
+      {window.innerWidth < 1000 && <BottomNav active={1} />}
     </>
   );
 }

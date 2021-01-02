@@ -10,33 +10,41 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import MenuIcon from "@material-ui/icons/Menu";
+
+import BarChartIcon from "@material-ui/icons/BarChart";
+import HomeIcon from "@material-ui/icons/Home";
+import WhatshotIcon from "@material-ui/icons/Whatshot";
+
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import { useHistory } from "react-router-dom";
+import GoogleAuth from "../Auth/GoogleAuth";
 
 const useStyles = makeStyles({
+  main: {},
   list: {
-    width: 250,
+    marginTop: "60px",
+    width: 350,
   },
   fullList: {
     width: "auto",
   },
 });
 
-export default function TemporaryDrawer() {
+const icons = [
+  <HomeIcon />,
+  <WhatshotIcon />,
+  <AddCircleIcon />,
+  <BarChartIcon />,
+];
+
+const links = ["", "trending", "AddPost", "Leaderboard"];
+
+const TemporaryDrawer = ({ state, setState, toggleDrawer }) => {
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    left: false,
-  });
 
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
+  const history = useHistory();
 
-    setState({ ...state, [anchor]: open });
-  };
+  const draw = window.innerWidth > 1000 ? "permanent" : "temporary";
 
   const list = (anchor) => (
     <div
@@ -46,39 +54,36 @@ export default function TemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
+        {["Voting", "Trending", "Upload", "Leaderboard"].map((text, index) => (
+          <ListItem
+            button
+            key={text}
+            onClick={() => {
+              history.push(`/${links[index]}`);
+            }}
+          >
+            <ListItemIcon>{icons[index]}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
       </List>
       <Divider />
-      <List>
-        {["", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
     </div>
   );
 
   return (
-    <React.Fragment key={"left"}>
-      <MenuIcon onClick={toggleDrawer("left", true)} />
+    <div key={"left"} className={classes.main}>
       <Drawer
+        variant={draw}
         anchor={"left"}
         open={state["left"]}
         onClose={toggleDrawer("left", false)}
       >
         {list("left")}
+        <GoogleAuth />
       </Drawer>
-    </React.Fragment>
+    </div>
   );
-}
+};
+
+export default TemporaryDrawer;

@@ -15,6 +15,10 @@ const Main = () => {
     setShowModal,
     auth,
     setAuth,
+    userDetails,
+    setUserDetails,
+    showLoader,
+    setShowLoader,
   ] = useContext(Context);
 
   return (
@@ -32,6 +36,8 @@ const Main = () => {
           setAuth={setAuth}
           showModal={showModal}
           setShowModal={setShowModal}
+          showLoader={showLoader}
+          setShowLoader={setShowLoader}
         />
         {/* <Drawer
         rot={rot}

@@ -25,6 +25,8 @@ const useStyles = makeStyles((theme) => ({
   btn: {
     background: "#524365",
     color: "white",
+    width: "100%",
+    margin: "auto",
   },
 }));
 

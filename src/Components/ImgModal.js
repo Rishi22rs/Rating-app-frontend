@@ -25,7 +25,7 @@ Modal.setAppElement("#imgmodal");
 const useStyles = makeStyles({
   root: {
     overflowY: "scroll",
-    maxWidth: 345,
+    maxWidth: 600,
     maxHeight: window.innerHeight - 50,
   },
 });
@@ -64,6 +64,7 @@ const ImgModal = ({
   return (
     <div style={{ zIndex: 9000 }}>
       <Modal
+        onRequestClose={() => setShowImgModal(false)}
         isOpen={showImgModal}
         style={{
           content: {
@@ -83,7 +84,7 @@ const ImgModal = ({
               onClick={() => setShowImgModal(false)}
               component="img"
               alt="Jenni"
-              height="300"
+              height="100%"
               image={imgData && imgData.url}
               title="Pixi-mesh"
             />

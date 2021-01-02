@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     position: "fixed",
     bottom: 0,
     width: 100 + "%",
-    zIndex: 99,
+    zIndex: 89999,
     background: "#524365",
   },
   btn: {
