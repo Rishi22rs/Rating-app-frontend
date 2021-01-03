@@ -111,9 +111,12 @@ const AddPost = () => {
 
   const [uploadPer, setUploadPer] = useState(0);
 
+  const user_id = userDetails && userDetails[0].user_id;
+
   const AddImages = () => {
     const formData = new FormData();
     console.log(content);
+    formData.append("user_id", user_id);
     formData.append("fileData", content.fileData);
     formData.append("description", content.description);
     formData.append("category", content.category);

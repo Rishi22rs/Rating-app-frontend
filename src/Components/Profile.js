@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ImageGridList() {
   const history = useHistory();
   const classes = useStyles();
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [
     category,
     setCategory,
@@ -108,7 +108,7 @@ export default function ImageGridList() {
     await axios
       .post(
         `${API}/profilePosts`,
-        { user_id: 1 },
+        { user_id: userDetails && userDetails[0].user_id },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("t")}`,
