@@ -39,8 +39,6 @@ const ImgModal = ({
 }) => {
   const [comments, setComments] = useState();
 
-  console.log(userDetails);
-
   const getComments = () => {
     axios
       .post(`${API}/getComments`, {
@@ -52,13 +50,9 @@ const ImgModal = ({
       });
   };
 
-  console.log(imgData);
-
   useEffect(() => {
     if (showImgModal == true) getComments();
   }, [showImgModal]);
-
-  console.log(auth);
 
   const classes = useStyles();
   return (

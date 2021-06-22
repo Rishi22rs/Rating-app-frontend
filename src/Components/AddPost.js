@@ -13,6 +13,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
     objectFit: "cover",
   },
 }));
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const AddPost = () => {
   const [
@@ -108,7 +114,7 @@ const AddPost = () => {
     e.preventDefault();
     AddImages();
   };
-
+  const [open, setOpen] = useState(false);
   const [uploadPer, setUploadPer] = useState(0);
 
   const user_id = userDetails && userDetails[0].user_id;
@@ -138,7 +144,14 @@ const AddPost = () => {
         console.log(res);
         setShowLoader(false);
         setContent(res.data);
+        setOpen(true);
       });
+  };
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -163,12 +176,14 @@ const AddPost = () => {
           style={{ marginBottom: "20px" }}
           variant="outlined"
           color="primary"
-          onClick={() => ref.current.click()}
+          onClick={() =>
+            auth !== 401 ? ref.current.click() : setShowModal(true)
+          }
         >
           Add Image
         </Button>
         <TextField
-          onChange={(e) => handleDataD(e)}
+          onChange={(e) => (auth !== 401 ? handleDataD(e) : setShowModal(true))}
           style={{ marginBottom: "20px" }}
           className={classes.root}
           id="outlined-multiline-static"
@@ -190,7 +205,9 @@ const AddPost = () => {
             id="demo-simple-select-outlined"
             value={content && content.category}
             label="Age"
-            onChange={(e) => handleDataC(e)}
+            onChange={(e) =>
+              auth !== 401 ? handleDataC(e) : setShowModal(true)
+            }
           >
             <MenuItem value={"Open battle"}>Open battle</MenuItem>
             <MenuItem value={"Cars"}>Cars</MenuItem>
@@ -204,11 +221,19 @@ const AddPost = () => {
             style={{ marginBottom: "20px" }}
           />
         )}
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={(e) => (auth !== 401 ? handleSubmit(e) : setShowModal(true))}
+        >
           Upload
         </Button>
       </form>
-
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Profile updated...
+        </Alert>
+      </Snackbar>
       {window.innerWidth < 1000 && <BottomNav active={2} />}
     </>
   );

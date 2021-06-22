@@ -78,6 +78,8 @@ const Compare = ({
     setRot(0);
   }, []);
 
+  console.log(window.innerWidth);
+
   const VoteThis = async (votedPic) => {
     await axios.post(
       `${API}/vote`,
@@ -110,7 +112,7 @@ const Compare = ({
   return (
     <Container
       maxWidth={
-        window.innerWidth > 1300 ? "lg" : window.innerWidth < 1200 ? "sm" : "md"
+        window.innerWidth > 1750 ? "lg" : window.innerWidth < 1400 ? "sm" : "md"
       }
       className={classes.container}
     >

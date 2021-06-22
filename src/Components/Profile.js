@@ -41,17 +41,25 @@ const useStyles = makeStyles((theme) => ({
   //   height: "100%",
   // },
   profile: {
+    padding: 50,
     position: "relative",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    height: "300px",
+    height: "200px",
   },
   large: {
     width: theme.spacing(20),
     height: theme.spacing(20),
     borderRadius: "10px",
+  },
+  pDetail: {
+    padding: 20,
+  },
+  nameEdit: {
+    display: "flex",
+    justifyContent: "space-between",
   },
   profileContent: {
     display: "flex",
@@ -63,6 +71,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 0 0px 0",
     width: 100 + "%",
     color: "white",
+  },
+  icon: {
+    height: 40,
+    width: 40,
   },
   profileRackTile1: {
     background: "#63539E",
@@ -103,6 +115,7 @@ export default function ImageGridList() {
   ] = useContext(Context);
   const [showImgModal, setShowImgModal] = useState(false);
   const [imgData, setImgData] = useState();
+  const [pDetails, setPDetails] = useState([]);
   const getPosts = async () => {
     setShowLoader(true);
     await axios
@@ -116,12 +129,32 @@ export default function ImageGridList() {
         }
       )
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
         setAuth(200);
         setShowLoader(false);
       })
-      .catch((err) => setAuth(err.response.status));
+      .catch((err) => setAuth(401));
+  };
+
+  const getDetails = () => {
+    axios
+      .post(
+        `${API}/getUserDetails`,
+        { user_id: userDetails && userDetails[0].user_id },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("t")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        setPDetails(res.data);
+        if (res.data.length === 0) {
+          history.push("/ProfileSetup");
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImgClick = (imgData) => {
@@ -134,8 +167,9 @@ export default function ImageGridList() {
       setShowModal(true);
     }
     getPosts();
+    getDetails();
   }, []);
-  console.log(data);
+
   let cols = [1, 1, 1, 3];
   return (
     <>
@@ -144,6 +178,7 @@ export default function ImageGridList() {
         showImgModal={showImgModal}
         setShowImgModal={setShowImgModal}
         imgData={imgData}
+        userDetails={userDetails}
       />
       <TopNav title={userDetails && userDetails[0].name} />
       {auth !== 401 && (
@@ -155,13 +190,22 @@ export default function ImageGridList() {
                 src="https://i.insider.com/5e820b04671de06758588fb8?width=600&format=jpeg&auto=webp"
                 className={classes.large}
               />
-              <Fab
-                color="secondary"
-                aria-label="edit"
-                onClick={() => history.push("/ProfileSetup")}
-              >
-                <EditIcon />
-              </Fab>
+            </div>
+            <div className={classes.pDetail}>
+              <div className={classes.nameEdit}>
+                <h3>{pDetails.length !== 0 && pDetails[0].username}</h3>
+                <Fab
+                  className={classes.icon}
+                  color="secondary"
+                  aria-label="edit"
+                  onClick={() =>
+                    history.push({ pathname: "/ProfileSetup", state: pDetails })
+                  }
+                >
+                  <EditIcon />
+                </Fab>
+              </div>
+              <p>{pDetails.length !== 0 && pDetails[0].bio}</p>
             </div>
             <div className={classes.profileContent}>
               <div

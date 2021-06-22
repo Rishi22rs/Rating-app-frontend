@@ -84,6 +84,14 @@ export default function Trending() {
           color="primary"
           aria-label="text primary button group"
         >
+          <Button
+            onClick={() => {
+              setCategory("Open Battle");
+              history.push("/");
+            }}
+          >
+            #Open Battle
+          </Button>
           {cate &&
             cate.map((tile, key) => (
               <Button

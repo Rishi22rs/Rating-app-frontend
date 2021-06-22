@@ -95,7 +95,6 @@ export default function Leaderboard() {
         }
       )
       .then((res) => {
-        console.log("pure", res.data);
         setData(res.data);
         setShowLoader(false);
       });

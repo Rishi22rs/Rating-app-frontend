@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -74,7 +73,7 @@ export default function RecipeReviewCard({
   const [comments, setComments] = useState([]);
 
   const handleExpandClick = () => {
-    if (window.innerWidth < 1000) {
+    if (window.innerWidth < 1450) {
       setTimeout(() => setExpanded(!expanded), 100);
     }
     getComments();
@@ -90,7 +89,7 @@ export default function RecipeReviewCard({
       });
   };
   useEffect(() => {
-    if (window.innerWidth > 1000) {
+    if (window.innerWidth > 1450) {
       setExpanded(true);
     }
     getComments();
